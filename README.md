@@ -8,7 +8,7 @@ Consists of security investigations, alert analysis, incident response scenarios
 Practical security infrastructure configuration and administration, including tools such as: <strong><u>Fortinet NGFW, FortiAnalyzer, Sysmon </u></strong> and <strong><u>Microsoft Defender XDR</u></strong>. Section showcases logging, network security controls, monitoring, and security policies management.  
 
 - <strong><ins>Detection Rules</ins></strong>  
-This section contains detection rules and related content, including Sigma rules, KQL, SPL, and Snort rules.
+This section contains detection rules and related content, including **Sigma rules, KQL, SPL**, and **Snort rules**.
 
 - <strong><ins>OSINT</ins></strong>  
 Practical OSINT tools, notes, methodologies, knowledge dumps, and cheat sheets used for security research, threat intelligence, and investigations.  
