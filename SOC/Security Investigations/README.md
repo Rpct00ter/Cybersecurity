@@ -1,7 +1,7 @@
 ---
 
-> ### Security Investigations
-> This directory contains hands-on security investigations covering different security incidents, alerts, and defensive scenarios. Each and every investigation in this directory follows the structure below:
+> ### Detection & Incident Response
+> This directory contains hands-on security investigations covering different security incidents, alerts, and defensive scenarios. Each and every investigation in this directory should follows the structure similar to the one that is shown below:
 <h2 align="center">
 🦊 🦊 🦊
 </h2>
