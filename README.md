@@ -1,6 +1,6 @@
 ## This repository contains my practical work, notes, and hands-on exercises related to blue teaming. Its main purpose is documenting solved cybersecurity challenges, investigations and defensive security scenarios.
 ### It is divided into four main sections:  
-- <strong><ins>SOC</ins></strong>  
+- <strong><ins>Detection and Incident Response</ins></strong>  
 Consists of security investigations, alert analysis, incident response scenarios and digital forensics. In this sections you may find the example usage of tools such as: <strong><u>Microsoft Sentinel , Splunk, Wazuh, Microsoft Defender XDR, Sysmon,Volatility 3, Autopsy</u></strong> and <strong><u> Wireshark.</u></strong>
 
 
