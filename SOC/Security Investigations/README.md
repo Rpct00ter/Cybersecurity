@@ -84,13 +84,14 @@
 (Briefly describe what the investigation demonstrated and what could be improved or monitored in the future.)
 
 ----
-> ### Files inside this directory follow the naming rule below:
+> ### Files inside this directory follow the naming rule below (Name of Incident or SIEM used in detection):
 >
 > ```text
 > └── Investigations/
 >     ├── Phishing-001/
 >     ├── Brute-Force-001/
 >     ├── Suspicious-PowerShell-001/
+>     ├── Splunk-Investigation-001/
 >     └── Network-Intrusion-001/
 > ```
 ---- 
