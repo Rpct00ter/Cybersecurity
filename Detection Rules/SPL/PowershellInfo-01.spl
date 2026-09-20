@@ -1,0 +1,4 @@
+index=* (EventCode=4688 OR process_name="powershell.exe" OR Image="*\\powershell.exe")
+| search process_name="powershell.exe" OR Image="*\\powershell.exe"
+| stats count as PowerShellExecutions by host, user, process_name, CommandLine
+| sort - PowerShellExecutions
