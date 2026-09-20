@@ -1,0 +1,26 @@
+#First sigma rule created with: https://sudosoc.com/sigma-builder
+
+title: Suspicious PowerShell Encoded Command
+id: eab95d29-d962-4fcc-8ef9-4f948793a859
+description: |
+    Detects PowerShell execution with encoded command (-EncodedCommand or -enc), commonly used by attackers to obfuscate malicious commands.
+author: Rpct00ter
+date: 2026-09-20
+status: stable
+level: high
+tags:
+  - attack.t1059.001
+  - attack.execution
+  - attack.defense_evasion
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: '\powershell.exe'
+    CommandLine|contains: '-EncodedCommand'
+  filter_signed:
+    CommandLine|contains: '-NonInteractive'
+  condition: selection and not filter_signed
+falsepositives:
+  - Legitimate administrative scripts using encoded commands
