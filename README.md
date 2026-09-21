@@ -1,3 +1,4 @@
+> **NOTE:** September is Potato Digging Month, so the repository will be updated in October (especially past investigations and kql rules) 🤪
 ## This repository contains my practical work, notes, and hands-on exercises related to blue teaming. Its main purpose is documenting solved cybersecurity challenges, investigations and defensive security scenarios.
 ### It is divided into four main sections:  
 - <strong><ins>Detection and Incident Response</ins></strong>  
