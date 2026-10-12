@@ -28,8 +28,7 @@ law:
 3.) Check settings
 <img width="1917" height="794" alt="image" src="https://github.com/user-attachments/assets/a4bd2b7b-48b9-4c2a-b29e-9add366744bb" />
 
-
-2.5) What to do to add endpoints there
+3.5.) How to specify from which devices logs are sent to this specific created LAW? How does it work that after LAW, and then after installing content hub logs suddenly occure?
 
 
 4.) Installing content hub solutions:
@@ -55,9 +54,15 @@ Or hub Solutions may be in azure portal:
 
 
 
+<img width="452" height="703" alt="image" src="https://github.com/user-attachments/assets/400ed461-6577-4c87-97a8-47f54956f7c9" />
+<img width="1880" height="797" alt="image" src="https://github.com/user-attachments/assets/0269b685-d875-49a8-b488-e5ccea2d2f55" />
 
+<img width="3321" height="1424" alt="image" src="https://github.com/user-attachments/assets/47b84606-5049-44d9-8b73-9205701be68a" />
+<img width="745" height="932" alt="image" src="https://github.com/user-attachments/assets/2456eca7-bb05-4435-a011-f9c89865ab1d" />
 
+<img width="745" height="932" alt="image" src="https://github.com/user-attachments/assets/7a25152a-48b8-46d2-bc95-130cee157184" />
 
+<img width="1888" height="932" alt="image" src="https://github.com/user-attachments/assets/c6ed6f36-d6de-4ce3-b98f-72dee23c66e8" />
 
 
 
@@ -66,355 +71,276 @@ Or hub Solutions may be in azure portal:
 
 
 
+# Deploying and Preparing Microsoft Sentinel for Security Monitoring
 
+**Project type:** Hands-on SIEM deployment lab  
+**Platform:** Microsoft Azure, Microsoft Sentinel, Log Analytics  
+**Learning environment:** TryHackMe  
+**Objective:** Deploy Microsoft Sentinel, configure log ingestion, install security content, and enable an analytics rule to detect potentially suspicious activity.
 
+## 1. Project Overview
 
+Microsoft Sentinel is a cloud-native Security Information and Event Management (SIEM) and Security Orchestration, Automation, and Response (SOAR) platform. It collects and analyzes security data from connected sources to help security teams detect threats, investigate incidents, and automate responses.
 
+In this lab, I explored the initial deployment and configuration of Microsoft Sentinel, including the creation of a Log Analytics workspace, installation of Content hub solutions, configuration of a data connector, and activation of an analytics rule.
 
+The goal was to understand the basic workflow required to prepare a SIEM environment for security monitoring.
 
+## 2. Creating a Log Analytics Workspace (LAW)
 
+A Log Analytics workspace is the central repository where Azure Monitor collects and stores log data. Microsoft Sentinel uses this workspace to query, correlate, and analyze data from connected sources.
 
+Before Sentinel can analyze security events, an appropriate workspace must be created and configured.
 
+### Deployment steps
 
+1. Sign in to the Microsoft Azure portal.
+2. Search for **Log Analytics workspaces**.
+3. Select **Create**.
+4. Choose the appropriate subscription and resource group.
+5. Specify a workspace name and Azure region.
+6. Review the configuration and select **Create**.
+7. Open the deployed workspace and verify that it is available.
 
+### Why is the workspace important?
 
-Deploy:
-Role: You are logged in with the following Azure job function role assignments:
+- **Centralized logging:** Stores logs from multiple connected data sources.
+- **Querying and investigation:** Supports Kusto Query Language (KQL) for searching and analyzing events.
+- **Sentinel integration:** Provides the workspace that Microsoft Sentinel uses for security analytics.
+- **Data management:** Allows administrators to configure retention, access permissions, and other workspace settings.
 
-    Log Analytics Contributor
-    Microsoft Sentinel Contributor
+The workspace's region, access controls, retention requirements, and ingestion costs should be considered during deployment.
 
-Lab scenario: A product needs to be utilized as part of organizational security policies. Your initial assignment is to onboard Microsoft Sentinel for the organization. You will:
+**Screenshots to include:**
 
-    First, create a Log Analytics workspace.
-    Then, enable/onboard Microsoft Sentinel to that workspace.
+[SCREENSHOT 1 — Log Analytics workspace overview]
 
-Access your lab by clicking the Cloud Details button below in conjunction with the lab instructions from Task 4:
+*Caption: The deployed Log Analytics workspace in Azure, showing its name and overview.*
 
-Step 1: Create a Log Analytics Workspace (LAW)
-Walkthrough (Click to see)
+[SCREENSHOT 2 — Create Log Analytics workspace wizard]
 
-    Log into the Azure portal using your lab credentials (make sure you first logged out of any previous lab account).
-    Using the top search bar, search for "Sentinel" and select "Microsoft Sentinel" in the dropdown.
+*Caption: Workspace creation configuration, including subscription, resource group, name, and region.*
 
-    Shows a search result for "sentinel" in the Microsoft Azure portal. The search results are categorized into "All," "Services," and "Resources." Under "Services," there is one result: "Microsoft Sentinel."
-    Click Create Microsoft Sentinel.
-    On the Add Microsoft Sentinel to a workspace page, click Create a new workspace.
-    Create a Log Analytics workspace (LAW) instance with the following values (your values might differ from the below screenshot):
-        Subscription: Az-Subs-B2C-1
-        Resource Group: rg-AZURE_LAB_ID
-        Name: law-AZURE_LAB_ID
-        Region: East US
+## 3. Enabling Microsoft Sentinel
 
-        A Microsoft Azure interface for creating a Log Analytics workspace. The interface is under the "Basics" tab and includes fields for project details and instance details.
-    Click Review + Create followed by Create again.
-    Wait for the LAW deployment.
-    Confirm that the new LAW is listed on the Add Microsoft Sentinel to a workspace page (you might need to refresh).
+After creating the workspace, the next step is to enable Microsoft Sentinel.
 
-Step 2: Add Microsoft Sentinel to the workspace
-Walkthrough (Click to see)
+Sentinel uses the Log Analytics workspace as its data foundation. Enabling Sentinel adds the security monitoring capabilities needed to work with connected log sources, analytics rules, incidents, and investigation tools.
 
-    Select recently created LAW, and click Add.
+### Deployment steps
 
-    Microsoft Azure portal showing the "Add Microsoft Sentinel to a workspace" page. The page includes options to create a new workspace and refresh the list.
-    Wait for Microsoft Sentinel to be added to the LAW.
-    Click OK after the Microsoft Sentinel free trial activated message.
-    Browse through the Get Started page to get an idea of what's to come next.
+1. Search for **Microsoft Sentinel** in the Azure portal.
+2. Select **Create** or **Add**, depending on the portal interface.
+3. Select the Log Analytics workspace created previously.
+4. Enable Microsoft Sentinel for that workspace.
+5. Open the Sentinel workspace and verify that its overview is accessible.
 
-    Microsoft Sentinel interface within Microsoft Azure. The interface is on the "News & guides" section under the "Get started" tab.
+**Screenshot to include:**
 
-    Go to General -> Overview on the left hand side to see the tiles - Incidents, Data, Automation and Analytics.
+[SCREENSHOT 3 — Microsoft Sentinel workspace overview]
 
-    Microsoft Sentinel interface within Microsoft Azure. The interface is on the "Overview" section showing zero incidents.
-    Confirm that no data connectors or incidents have been found yet, as this is a brand-new deployment.
+*Caption: Microsoft Sentinel enabled and associated with the Log Analytics workspace.*
 
+## 4. Installing Solutions from the Content Hub
 
-Roles:
-Before we dive deep into Microsoft Sentinel's specific features, it might be worthwhile to understand some Sentinel-specific roles and the scopes under which team members work.
+The Content hub provides a centralized location for discovering and installing Microsoft Sentinel solutions and standalone security content.
 
-    Microsoft Sentinel Reader
-        View data, incidents, workbooks, and other Microsoft Sentinel resources
-    Microsoft Sentinel Responder  (in addition to the above Sentinel Reader)
-        Manage incidents
-    Microsoft Sentinel Contributor (in addition to the above Sentinel Responder)
-        Install/Update solutions from the Content hub.
-        Create and edit workbooks, analytics rules, and other Microsoft Sentinel resources
-    Microsoft Sentinel Playbook Operator
-        List, view, and manually run playbooks
-    Microsoft Sentinel Automation Contributor (not for user accounts)
-        Allows Microsoft Sentinel to add playbooks to automation rules
+Solutions can include data connectors, analytics rule templates, workbooks, hunting queries, and playbooks. These components help administrators prepare Sentinel for specific monitoring scenarios.
 
-Looking from the Microsoft SOC team and analysts' perspective, team members will be assigned either or a combination of the above roles (except the last one!) to perform their daily tasks. Below could be a sample distribution of Microsoft Sentinel-specific roles to SOC team members:
+### Deployment steps
 
-Stakeholders, SOC managers, and more.
-	
+1. Open the Microsoft Sentinel workspace.
+2. Navigate to **Content management → Content hub**.
+3. Search for the **Microsoft Entra ID** solution.
+4. Open the solution and select **Install**.
+5. Wait for installation to finish.
+6. Review the installed content and its configuration requirements.
 
-Microsoft Sentinel Reader
+I also explored the Threat Intelligence solution as part of the lab.
 
-Security analysts, incident responders (usually SOC Level-1 Analysts)
-	
+### Why is the Content hub important?
 
-Microsoft Sentinel Responder
+Installing relevant solutions makes prebuilt integrations and security content available without requiring every component to be created from scratch. This can accelerate deployment and provide a starting point for threat detection and investigation.
 
-Security engineers, Fusion Analytics team members (usually SOC Level-2 Analysts)
+However, installing a solution does not necessarily activate all its components or start collecting logs. Data connectors and other configurable content may still require additional setup.
 
-Install and manage Solutions using Content Hub
+**Screenshots to include:**
 
-Create and delete workbooks
-	
+[SCREENSHOT 4 — Content hub solution catalogue]
 
-Microsoft Sentinel Contributor
-Automation team members (usually SOC Level-1 Analysts)
+*Caption: Available solutions and standalone content in Microsoft Sentinel's Content hub.*
 
-Automate responses to threats with playbooks
-	
+[SCREENSHOT 5 — Microsoft Entra ID solution details]
 
-Microsoft Sentinel Playbook Operator
+*Caption: Solution details showing the types of content provided by the Microsoft Entra ID package.*
 
-As a best practice, try to assign these roles to the Resource Group where Microsoft Sentinel workspace resides, as there might be other resources in that resource group which support the functionality of Microsoft Sentinel.
+[SCREENSHOT 6 — Installed solution status]
 
-Given that Microsoft Sentinel is an Azure service add-on to Log Analytics workspace, while working with Sentinel, there will be two sets of settings that you need to maintain.
+*Caption: Successful installation of the solution and review of its available content.*
 
-    Microsoft Sentinel settings
-    Log Analytics workspace settings
+## 5. Configuring a Data Connector and Ingesting Logs
 
-That's why some functionality changes in Microsoft Sentinel require you to modify underlying Log Analytics workspace settings.
-Data Retention
+A data connector establishes the integration between Microsoft Sentinel and a supported data source. It defines how relevant events or security data are collected and made available for analysis.
 
-Although Microsoft Sentinel has many individual features and specific settings, let's mention here one of the most important ones: Data Retention. It is also important to note that Microsoft Sentinel is billed based on the volume of data ingested for analysis.
+Installing a connector through the Content hub does not automatically mean that it is connected.
 
-These two tie together, and there is a correlation between them, i.e., the more data you have—or keep in the Log Analytics workspace—the more relevant and accurate threat analysis you can perform.
+### Deployment steps
 
-Microsoft Sentinel settings can be found at Microsoft Sentinel > Select the workspace > Configuration > Settings.
+1. Open the installed solution and select **Manage** where available.
+2. Locate the relevant data connector.
+3. Open its configuration page.
+4. Review the prerequisites and required permissions.
+5. Follow the connector-specific configuration instructions.
+6. Select **Connect** or complete the required setup.
+7. Check the connection status and verify whether data is being received.
 
-Microsoft Sentinel interface within Microsoft Azure. The interface is on the "settings" section.
+In the lab, I configured the Microsoft Defender Threat Intelligence connector to import threat intelligence indicators into Sentinel.
 
-To modify Data Retention, we need to go to Workspace settings since data is stored in the underlying Log Analytics workspace for Microsoft Sentinel.
+### Understanding the log ingestion process
 
-A settings menu with the "Workspace settings" tab highlighted, featuring options like "Entity behavior analytics," "Anomalies," "Workspace manager configuration," "Playbook permissions," "How do we use your data?," "Auditing and health monitoring," and "Remove Microsoft Sentinel."
-Data Retention settings are tucked into Usage and estimated costs under Settings.
+The relationship between the workspace, Content hub, and data connector is important:
 
-"Usage and estimated costs" section within a Log Analytics workspace in Microsoft Azure.
+1. **Log Analytics workspace:** Provides the destination for supported log data.
+2. **Content hub solution:** Makes the relevant connector and other security content available.
+3. **Data connector:** Establishes and configures the integration with the source.
+4. **Data ingestion:** Events or indicators are delivered to the workspace when the integration is configured and the source provides data.
+5. **Microsoft Sentinel:** Uses the ingested data for analytics, hunting, investigation, and incident generation.
 
-Default data retention is 31 days, and due to organizational policies, data governance, and other requirements, you might need to increase it. Note that longer retention will incur additional charges as the Microsoft Sentinel billing model is based on log data storage. Depending on how many data connectors you have (we will get to Data Connectors soon) and the amount of log data they are pouring into LAW, sometimes these logs can grow exponentially, which, in return, will be reflected in the costs. Hence, it is important to monitor the organization's log usage details regularly.
+Logs do not appear simply because Sentinel is enabled or a Content hub solution is installed. The data source must be configured to send data, and the selected connector must support that source.
 
-Data Sources and Data Connectors
+For example, endpoint logs might require an agent or endpoint integration, while Azure resource logs may require diagnostic settings to route supported logs to the workspace.
 
-Data connectors are used to connect log data to various data sources. As of this writing, several hundred data sources could send data to Microsoft Sentinel, and this number keeps growing each day. Hence, there are several hundreds of associating data connectors since these connectors are specific to the data sources, data types and data formats of the ingested log data.
+### How to verify ingestion
 
-Displays four categories with corresponding numbers: Solutions: 342 (with a cloud icon), Standalone contents: 273 (with a grid icon), Installed: 0 (with a green checkmark icon), Updates: 0 (with a blue upward arrow icon).
+The connector's status and last-log-received information can provide useful indicators, but the most important verification is to confirm that data is actually present in the expected Log Analytics table.
 
-Microsoft Sentinel includes various data connectors for both Microsoft and third-party products to assist in onboarding your data. These data connectors are essential for integrating and ingesting data from various sources, such as Microsoft Defender, , Cisco, etc., into Microsoft Sentinel, providing real-time threat detection and analysis.
+For the Threat Intelligence connector explored in this lab, the relevant table was `ThreatIntelligenceIndicator`.
 
-Data connectors are available in various ways:
+A successful connection may not immediately produce data. The result depends on the connector, source activity, configuration, and ingestion delay.
 
-    Out-of-the-box (OOTB)
-    Packaged with Content hub solutions
+**Screenshots to include:**
 
-Microsoft Sentinel Data Connectors page in Microsoft Azure. The left sidebar contains navigation options, including Overview, Logs, News & guides, Search, Incidents, Workbooks, Hunting, Notebooks, Entity behavior, Threat intelligence, MITRE ATT&CK, Content hub, Repositories, Community, Workspace manager, Data connectors, Analytics, and Watchlist. The main section displays "0 Connectors" and "0 Connected."
+[SCREENSHOT 7 — Threat Intelligence data connector configuration]
 
-In the earlier years of Microsoft Sentinel, the only option to ingest data was to use data connectors. However, as the number of data connectors increased, the need to organize them based on their type and package them into a solution-like entity emerged. Out of this need, the Content hub concept was introduced. The Content hub provides a packaged way of installing and enabling data connectors for various data sources.
+*Caption: Connector configuration and prerequisites for connecting Microsoft Defender Threat Intelligence.*
 
-Microsoft Sentinel Content hub is a place to centrally discover, install, enable, and manage out-of-the-box content and solutions for Microsoft Sentinel. It is usually the starting point for any Microsoft Sentinel administrator after the initial deployment.
+[SCREENSHOT 8 — Connected data connector]
 
-Content hub provides:
+*Caption: Connector connection status and the data types expected to be ingested.*
 
-    Centralized in-product search for solutions
-    Single-step deployment
-    Installation of out-of-the-box solutions and content in Microsoft Sentinel
+[SCREENSHOT 9 — Log Analytics table containing ingested data]
 
-Content hub can also be referred to as a Security Information and Event Management () library that enables you to ingest data, monitor, alert, hunt, investigate, respond, and connect with different products, platforms, and services in Microsoft Sentinel.
+*Caption: Verification of the ThreatIntelligenceIndicator table in the workspace.*
 
-A "Content hub" interface in a software platform displays 342 solutions and 273 standalone contents, none installed or updated. A table lists contents with columns for Title, Status, Source, Provider, Support, Category, and Type.
-Content Source: Standalone vs. Solutions
+## 6. Enabling an Analytics Rule
 
-It is important to note that content sources can be standalone content or solutions.
+Analytics rules analyze ingested data to identify activity that may indicate a security threat. Depending on the rule and its configuration, detections can generate alerts and incidents for investigation.
 
-A user interface for selecting content sources. There is a search bar labeled "Search values" at the top. Below the search bar, there are three options with checkboxes: "All," "Solution," and "Standalone."
+In the lab, I used a prebuilt rule template to configure detection of rare subscription-level operations in Azure.
 
-Microsoft Sentinel Solutions are packages of content, such as data connectors, workbooks, analytic rules, playbooks, etc., that fulfil an end-to-end product, domain, or industry vertical scenario in Microsoft Sentinel. We will explore the details of these content types in some upcoming rooms, but for now, we need to get a good grasp of how they are organized in Microsoft Sentinel.
+### Configuration steps
 
-Content type selection menu with a search bar labeled "Search values" at the top. Options include: "All," "Analytics rule (1387)," "Data connector (316)," "Hunting query (834)," "Parser (299)," "Playbook (411)," "Watchlist (27)," and "Workbook (301)." All checkboxes are selected.
+1. Install the **Azure Activity** solution from the Content hub.
+2. Navigate to **Analytics** in the Sentinel workspace.
+3. Open the **Rule templates** tab.
+4. Search for the rule *Rare subscription-level operations in Azure*.
+5. Select the template and choose **Create rule**.
+6. Review the rule description and its MITRE ATT&CK mappings.
+7. Inspect the KQL query and understand which operations it identifies.
+8. Configure the query schedule to run every hour and look back over the previous seven days.
+9. Review the incident settings.
+10. Select **Review + create** and save the rule.
 
-As an example, let's take a peek at the Microsoft Entra ID solution.
+The rule can be customized to suit the environment, but changes should be made only after understanding the detection logic and the expected results.
 
-Microsoft Entra ID solution for Microsoft Sentinel including description.
+### Important configuration concepts
 
-As seen above, the solution description shows what this solution is made of in terms of content types, i.e., what the package contains:
+- **KQL query:** Defines the events and conditions the rule evaluates.
+- **Run frequency:** Determines how often the query executes.
+- **Lookup period:** Defines the historical window of data evaluated by the query.
+- **Severity:** Indicates the configured severity of a detection.
+- **MITRE ATT&CK mapping:** Associates the detection with relevant adversary tactics and techniques.
+- **Incident settings:** Control how triggered alerts are grouped into incidents.
 
-    1 Data connector - for ingesting log data
-    63 Analytics rules - for analyzing the threats and creating incidents
-    11 Playbooks - for automation
+An enabled analytics rule is not proof that a threat has been detected. It must have suitable data to evaluate, and its results should be validated.
 
-This also means that, when installed, this solution will deploy the above-listed contents into your Microsoft Sentinel environment. Currently, with no Content hub solution installed, you won't see any data connectors available to connect.
+**Screenshots to include:**
 
-"Microsoft Sentinel | Data connectors" interface. The selected workspace is 'law-20240213-123'. The interface includes a search bar, options for "Refresh" and "Guides & Feedback," and a notification that "Azure Active Directory (Azure AD) is now Microsoft Entra ID."
+[SCREENSHOT 10 — Analytics rule template]
 
-With this out of the way, we can go ahead and install our first Content hub solution in upcoming tasks.
+*Caption: Selecting the Rare subscription-level operations in Azure detection template.*
 
-Context: Your company recently deployed Microsoft Sentinel. However, no Content hub solutions have been installed yet.
+[SCREENSHOT 11 — KQL query and scheduling settings]
 
-Role: You are logged in as:
+*Caption: Reviewing the detection logic and configuring an hourly execution schedule with a seven-day lookback.*
 
-    Microsoft Sentinel Contributor
-    Log Analytics Contributor
+[SCREENSHOT 12 — Active analytics rule]
 
-The Azure portal shows the "Job function roles" tab, filtered for roles related to "Microsoft Sentinel," including "Microsoft Sentinel Automation Contributor," "Microsoft Sentinel Contributor," "Microsoft Sentinel Playbook Operator," "Microsoft Sentinel Reader," and "Microsoft Sentinel Responder."
+*Caption: The saved analytics rule displayed in the Active rules list.*
 
-Lab scenario: Following the initial deployment of Microsoft Sentinel, you are tasked with installing a Content hub solution.
+## 7. Configuring an Automation Rule
 
-    First, make sure Sentinel is enabled for the workspace
-    Then, you will install a Content hub solution
-    Finally, you will review the results
+Automation rules can perform actions when specified incident-related conditions are met. They help standardize incident handling and reduce repetitive manual tasks.
 
-Access your lab by clicking the Cloud Details button below in conjunction with the lab instructions from Task 4:
+As an additional exercise, I configured an automation rule named **Tag Rule** to add the `subscription` tag when an incident is created.
 
-Please make sure to have performed these actions on the Cloud Details pop-up:
-Environment Tab 	Click Join Lab
-Actions Tab 	Click Deploy Lab
+### Configuration steps
 
-Step 1: Install a Content hub solution
-Walkthrough (Click to see)
+1. Open the analytics rule's automated response settings or the relevant automation rules interface.
+2. Create a new automation rule.
+3. Set the trigger to **When incident is created**.
+4. Add the action **Add tags**.
+5. Specify the tag `subscription`.
+6. Review the configuration and save the rule.
 
-    Log in to Azure portal using your lab credentials (make sure you first logged out of any previous lab account)
-    Go to Microsoft Sentinel and open the available workspace
+This exercise demonstrates a basic incident-management workflow. Tagging can help organize incidents, but the tag should represent a meaningful classification in a real environment.
 
-    Under Content management, select Content hub
+**Screenshot to include:**
 
-Content management menu with three options: Content hub, Repositories (Preview), and Community.
+[SCREENSHOT 13 — Automation rule configuration]
 
-    Note that currently, no standalone contents or packaged solutions are installed
+*Caption: Automation rule configured to add a tag to newly created incidents.*
 
-Microsoft Sentinel Content Hub. The statistics at the top indicate 342 Solutions and 273 Standalone contents available, with 0 Installed and 0 Updates.
+## 8. Permissions and Operational Considerations
 
-    Search for solution: Microsoft Entra ID, select it and click Install
+Deploying Sentinel requires appropriate permissions at the relevant Azure resource and workspace scopes.
 
-User interface for selecting and installing software in Microsoft Sentinel. "Microsoft Entra ID" is highlighted as "FEATURED." The description includes provider, support, version, and a note to read release notes before installation.
+During the lab, I worked with Microsoft Sentinel Contributor and Log Analytics Contributor permissions. However, the exact permissions required depend on the operation and the data connector being configured.
 
-    Wait for the content hub installation to complete
+Before deploying Sentinel in a production environment, it is important to consider:
 
-A status bar with the following: checkbox icon, "Microsoft Entra ID" text with diamond logo, pink "FEATURED" label, blue circular "In progress" icon with arrows.A status bar with the following: checkbox icon, "Microsoft Entra ID" text with diamond logo, pink "FEATURED" label, green circular "Installed" icon checked.
+- **Least privilege:** Assign only the permissions required for each task.
+- **Data source coverage:** Confirm that relevant systems are connected and sending the required events.
+- **Ingestion and retention costs:** Monitor data volume and configure retention to meet operational and compliance needs.
+- **Detection quality:** Review analytics rule logic, severity, schedules, and potential false positives.
+- **Validation:** Confirm that expected log tables contain data and that detection rules behave as intended.
+- **Incident response:** Define how incidents will be investigated, escalated, documented, and resolved.
 
-Step 2: Review the results
-Walkthrough (Click to see)
+These considerations help move a Sentinel deployment from initial configuration toward a maintainable security monitoring environment.
 
-    Select the recently installed Content hub solution
+## 9. Skills Demonstrated
 
-    Review the Content hub solution details on the right pane
+Through this hands-on lab, I practised the following skills relevant to a Junior Security Engineer role:
 
-Microsoft Entra ID solution for Microsoft Sentinel.
+- Deploying a Log Analytics workspace and enabling Microsoft Sentinel.
+- Exploring and installing Microsoft Sentinel Content hub solutions.
+- Understanding the purpose and configuration of data connectors.
+- Verifying data ingestion into Log Analytics tables.
+- Reviewing KQL-based analytics rule logic.
+- Configuring detection schedules and incident settings.
+- Mapping detections to the MITRE ATT&CK framework.
+- Creating a basic automation rule for incident tagging.
+- Understanding the importance of RBAC, least privilege, and data retention.
 
-    Note that various content types are deployed by this Content hub solution:
-        63 Analytics Rules
-        1 Data Connector
-        11 Playbooks
-        2 Workbooks (dashboards)
+## 10. Conclusion
 
-    Click Manage to see the package details for the Content hub solution
+This lab provided practical experience with the foundational components of Microsoft Sentinel, from workspace preparation and solution installation to data ingestion and analytics rule configuration.
 
-A Microsoft Sentinel Content hub interface displaying content items for Microsoft Entra ID. It shows 77 installed content items and 75 configuration-needed.
+It also reinforced an important operational principle: a SIEM is useful only when relevant data is successfully ingested, detections are configured appropriately, and resulting alerts and incidents can be investigated.
 
-    Under Content name, click on Microsoft Entra ID
+**Next steps:** Extend the lab by connecting an additional log source, writing a custom KQL detection, validating a detection with sample events, and documenting the investigation process.
 
-    Review the data connector status
+*Portfolio note: This project documents a guided TryHackMe lab. Any screenshots, configurations, and results presented should reflect the steps actually completed in the lab environment.*
 
-A "Data connectors" interface from a software application. It displays a summary with 1 connector available and 0 connected.
-
-    Note that the data connector is installed. However, it is still not connected yet. We will do this later on
-    After completing this lab, now you should be able to:
-        Install a Content hub solution
-        Review an installed Content hub solution and it's connector status
-Now that we have a Content hub solution installed, which comes with a data connector, the next step is to connect and configure it so that log data starts flowing into the Log Analytics workspace for Microsoft Sentinel to analyze and correlate.
-
-To connect a data connector, the concept is to go to its connector page and follow the specific instructions for that connector.
-
-Microsoft Sentinel Data connectors page with the "Microsoft Entra ID" connector selected.
-
-Let's explore some sections of a connector page. There will be lots of information on connector pages; note that they are all specific to that particular connector. The main sections to note are:
-
-    Description: What the connector is
-    Data types: Log tables that will be populated in the Log Analytics workspace once the connector is connected, i.e., types of log data
-    Instructions:
-        Prerequisites: Permissions you need to have to connect the data
-        Configuration: Specific config steps for the connector
-
-Microsoft Sentinel Data connectors page for Microsoft Entra ID.
-
-Note: As per prerequisites, your current assigned role may not always have the necessary permissions to connect a data connector, although you might have a Microsoft Sentinel-specific role assigned, such as Microsoft Sentinel Contributor. It's a good practice to familiarize yourself with Microsoft Sentinel roles and permissions.
-
-Depending on a specific connector, you may need extra permissions for different scopes, which are detailed in the Prerequisites section. If you don't have these permissions, be sure to contact your cloud administrator.
-
-In the next task, we will connect and configure a data connector.
-Context: Your company recently deployed Microsoft Sentinel and a Content hub solution is installed. A data connector is populated; however, it has not been connected yet.
-
-Role: You are logged in as:
-
-    Microsoft Sentinel Contributor
-    Log Analytics Contributor
-
-Lab scenario: Following the installation of the Content hub solution, you are tasked with configuring data connectors.
-
-    First, you will install another Content hub solution: Threat Intelligence
-    Then, you will connect the data connector
-    Finally, you will review the ingested Threat Intelligence data
-
-First, leave the lab we started in Task 5 by pressing the Leave Lab button on the Cloud Details pop-up from Task 5. Then, access your new lab by clicking the Cloud Details button below in conjunction with the lab instructions from Task 4:
-
-Please make sure to have performed these actions on the Cloud Details pop-up:
-Environment Tab 	Click Join Lab
-Actions Tab 	Click Deploy Lab
-
-Step 1: Install the Threat Intelligence Content hub solution
-Walkthrough (Click to see)
-
-    Log in to Azure portal using your lab credentials (make sure you first logged out of any previous lab account)
-    Go to Microsoft Sentinel and open the available workspace
-    Under Content Management, Select Content hub
-    Search for Threat Intelligence and select it
-    Install the Threat Intelligence Content hub solution
-
-Search results in a content management system for "threat intel." There is a single search result titled "Threat Intelligence," labeled as "FEATURED" and "PREVIEW."
-
-Step 2: Connect the Threat Intelligence data connector
-Walkthrough (Click to see)
-
-    After the installation is complete, select Manage to review the deployed Threat Intelligence (TI) connectors
-
-Threat intelligence solution for Microsoft Sentinel with description.
-
-    Select the Microsoft Defender Threat Intelligence data connector and open the connector page
-
-Different threat intelligence data connectors. The columns are labeled "Content name," "Created content," "Content type," and "Version."
-
-    Notice the Prerequisites and Configuration sections:
-        Prerequisites will show the required permissions to configure the data connector.
-
-Microsoft Defender Threat Intelligence (Preview) setup, displaying "Prerequisites" with details for workspace read/write permissions.
-
-    For this data connector, only workspace-scoped permissions are needed, which you already have
-    Other data connectors might have different permission requirements on various scopes depending on the integration nature of that data connector
-    Click Connect to import Indicators of Compromise (IOCs) from Microsoft Defender Threat Intelligence (MDTI) into Microsoft Sentinel
-
-Microsoft Defender Threat Intelligence (Preview) configuration screen in Microsoft Sentinel.
-
-    Review the data connector's status to ensure it is connected
-
-Microsoft Defender Threat Intelligence (Preview) interface. The status is connected, with the provider noted as Microsoft and the last log received currently unavailable.
-
-    When the log data starts to flow, the Last Log Received will be updated (this might take 10-15min, but it's not required to wait for it)
-
-Microsoft Defender Threat Intelligence (Preview) dashboard. The status is Connected, with Microsoft as the provider, and no data received for the last log. The data type listed is ThreatIntelligenceIndicator with no data received.
-
-    Once the connection is established, the data type icon will turn to green, indicating that the corresponding log table is populated and now contains data in the Log Analytics workspace
-
-A line graph titled "Data received" displays data from April 3 to April 9. The y-axis ranges from 0 to 340, while the x-axis lists the dates.
-
-    Clicking on the table name will take you to the ThreatIntelligenceIndicator log table in the Log Analytics workspace
-
-Microsoft Sentinel Logs interface displaying a result for "ThreatIntelligenceIndicator." The result includes information about a security alert generated by Microsoft Defender Threat Intelligence
-
-    After completing this task, you should be able to:
-        Connect a data connector
-        Review its connection status and confirm that logs for that connector are being ingested successfully
 
 
