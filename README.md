@@ -6,7 +6,7 @@ Consists of security investigations, alert analysis, incident response scenarios
 
 
 - <strong><ins>Security Engineering</ins></strong>  
-Practical security infrastructure configuration and administration, including tools such as: <strong><u>Fortinet NGFW, FortiAnalyzer, Sysmon </u></strong> and <strong><u>Microsoft Defender XDR</u></strong>. Section showcases logging, network security controls, monitoring, and security policies management.  
+Practical security infrastructure configuration and administration, including tools such as: <strong><u>Fortinet NGFW, FortiAnalyzer</u></strong> and <strong><u>Microsoft Azure services</u></strong>. Section showcases logging, network security controls, monitoring, and security policies management.  
 
 - <strong><ins>Detection Rules</ins></strong>  
 This section contains detection rules and related content, including **Sigma rules, KQL, SPL**, and **Snort rules**.
