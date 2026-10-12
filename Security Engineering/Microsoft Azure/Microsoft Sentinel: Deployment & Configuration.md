@@ -73,24 +73,17 @@ Or hub Solutions may be in azure portal:
 
 # Deploying and Preparing Microsoft Sentinel for Security Monitoring
 
-**Project type:** Hands-on SIEM deployment lab  
-**Platform:** Microsoft Azure, Microsoft Sentinel, Log Analytics  
-**Learning environment:** TryHackMe  
-**Objective:** Deploy Microsoft Sentinel, configure log ingestion, install security content, and enable an analytics rule to detect potentially suspicious activity.
+## What is Microsoft Sentinel  
+Microsoft Sentinel is a cloud-native Security Information and Event Management (SIEM) and Security Orchestration, Automation, and Response (SOAR) platform. It collects and analyzes security data from connected sources to help security teams detect threats, investigate incidents, and automate responses.  
 
-## How Device Logs Reach Microsoft Sentinel
+## How Device Logs Reach Microsoft Sentinel  
+Creating a Log Analytics Workspace (LAW) does not automatically collect logs from every device. Each data source must be configured to send its logs to the intended workspace using an appropriate data connector or log collection mechanism.  
 
-Creating a Log Analytics Workspace (LAW) does not automatically collect logs from every device. Each data source must be configured to send its logs to the intended workspace using an appropriate data connector or log collection mechanism.
+## Configuring Log Collection with a Data Collection Rule (DCR)
 
-### 1. Configuring Log Collection with a Data Collection Rule (DCR)
+A **Data Collection Rule (DCR)** defines which data should be collected, how it should be collected, and where it should be sent. For supported Windows and Linux endpoints, Azure Monitor Agent (AMA) works with DCRs to collect selected events and forward them to a specified Log Analytics Workspace. F.ex.: To collect Windows security events from a particular endpoint, I would install and configure AMA, create a DCR that selects the required Windows Security events, specify the destination LAW, and associate the rule with the endpoint. This allows administrators to control which devices participate in log collection and which event types are ingested, rather than collecting everything from every device. 
 
-A **Data Collection Rule (DCR)** defines which data should be collected, how it should be collected, and where it should be sent. For supported Windows and Linux endpoints, Azure Monitor Agent (AMA) works with DCRs to collect selected events and forward them to a specified Log Analytics Workspace.
-
-For example, to collect Windows security events from a particular endpoint, I would install and configure AMA, create a DCR that selects the required Windows Security events, specify the destination LAW, and associate the rule with the endpoint.
-
-This allows administrators to control which devices participate in log collection and which event types are ingested, rather than collecting everything from every device.
-
-### 2. Example: Detecting a Failed Windows Login
+## Example: Detecting a Failed Windows Login
 
 When a user enters an incorrect password on a Windows endpoint, Windows records a failed logon event in its Security event log, typically with **Event ID 4625**.
 
@@ -102,40 +95,16 @@ The event reaches Microsoft Sentinel through the following process:
 4. **Log Analytics Workspace:** The event is ingested into the appropriate table, commonly `SecurityEvent` when using the relevant Windows Security Events via AMA configuration.
 5. **Microsoft Sentinel:** Sentinel can query the ingested event using Kusto Query Language (KQL). An analytics rule can detect the failed login and generate an alert or incident when its configured conditions are met.
 
-**Important:** Ingesting a log does not automatically create a Sentinel incident. A suitable analytics rule must be configured and enabled to detect the event, and the event must satisfy that rule's conditions.
+>**Note:** Ingesting a log does not automatically create a Sentinel incident. A suitable analytics rule must be configured and enabled to detect the event, and the event must satisfy that rule's conditions.
 
 
 
-## 1. Project Overview
+# Microsoft Sentinel Deployment & Configuration guide
+## 1. Creating a Log Analytics Workspace (LAW)
 
-Microsoft Sentinel is a cloud-native Security Information and Event Management (SIEM) and Security Orchestration, Automation, and Response (SOAR) platform. It collects and analyzes security data from connected sources to help security teams detect threats, investigate incidents, and automate responses.
+A Log Analytics workspace is the central repository where Azure Monitor collects and stores log data. Microsoft Sentinel uses this workspace to query, correlate, and analyze data from connected sources. Before Sentinel can analyze security events, an appropriate workspace must be created and configured.
 
-In this lab, I explored the initial deployment and configuration of Microsoft Sentinel, including the creation of a Log Analytics workspace, installation of Content hub solutions, configuration of a data connector, and activation of an analytics rule.
 
-The goal was to understand the basic workflow required to prepare a SIEM environment for security monitoring.
-
-## 2. Creating a Log Analytics Workspace (LAW)
-
-A Log Analytics workspace is the central repository where Azure Monitor collects and stores log data. Microsoft Sentinel uses this workspace to query, correlate, and analyze data from connected sources.
-
-Before Sentinel can analyze security events, an appropriate workspace must be created and configured.
-
-### Deployment steps
-
-1. Sign in to the Microsoft Azure portal.
-2. Search for **Log Analytics workspaces**.
-3. Select **Create**.
-4. Choose the appropriate subscription and resource group.
-5. Specify a workspace name and Azure region.
-6. Review the configuration and select **Create**.
-7. Open the deployed workspace and verify that it is available.
-
-### Why is the workspace important?
-
-- **Centralized logging:** Stores logs from multiple connected data sources.
-- **Querying and investigation:** Supports Kusto Query Language (KQL) for searching and analyzing events.
-- **Sentinel integration:** Provides the workspace that Microsoft Sentinel uses for security analytics.
-- **Data management:** Allows administrators to configure retention, access permissions, and other workspace settings.
 
 The workspace's region, access controls, retention requirements, and ingestion costs should be considered during deployment.
 
