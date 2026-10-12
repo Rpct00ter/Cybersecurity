@@ -41,7 +41,12 @@ Data Connector:
 
 
 
+Or hub Solutions may be in azure portal:
+<img width="1911" height="887" alt="image" src="https://github.com/user-attachments/assets/1589b473-94c2-4a79-8876-1bdce56916c9" />
+<img width="1920" height="920" alt="image" src="https://github.com/user-attachments/assets/eb293a8f-8cb5-406f-a97d-c581e37dcd69" />
 
+<img width="1466" height="621" alt="image" src="https://github.com/user-attachments/assets/0a059587-50ef-4642-b94d-01af414e8b51" />
+<img width="1501" height="735" alt="image" src="https://github.com/user-attachments/assets/bc4f3799-46a5-4cc7-9d2d-5c514cac8daa" />
 
 
 
