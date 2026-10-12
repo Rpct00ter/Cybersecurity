@@ -28,6 +28,10 @@ law:
 3.) Check settings
 <img width="1917" height="794" alt="image" src="https://github.com/user-attachments/assets/a4bd2b7b-48b9-4c2a-b29e-9add366744bb" />
 
+
+2.5) What to do to add endpoints there
+
+
 4.) Installing content hub solutions:
 <img width="1634" height="706" alt="image" src="https://github.com/user-attachments/assets/cc631388-158b-439c-8a67-befc556a1ba8" />
 
