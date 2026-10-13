@@ -17,8 +17,6 @@ By correlating signals from these sources, Defender XDR helps security analysts 
 
 <img width="1917" height="953" alt="image" src="https://github.com/user-attachments/assets/c2a489c1-d854-4f5c-9d69-02f9f14a4e24" />
 
-*The Defender portal provides a centralized view of security incidents, alerts, and available investigation tools.*
-
 ## 2. Understanding Defense Evasion
 
 Defense Evasion is a tactic in the MITRE ATT&CK framework describing techniques attackers use to avoid detection or bypass security controls during their operations.
@@ -34,7 +32,6 @@ Common Defense Evasion techniques include:
 - **Signed Binary Proxy Execution:** Abusing trusted, signed system binaries to execute malicious content.
 <img width="1202" height="673" alt="image" src="https://github.com/user-attachments/assets/c8057e6f-a6a6-4554-86b0-679c13922ef0" />
 
-Understanding these techniques helps security analysts recognize suspicious behavior and identify potential attempts to weaken an organization's defenses.
 
 ## 3. Exploring the Microsoft Defender Portal
 
@@ -50,7 +47,6 @@ Incidents are a collection of alerts related to a single threat or attack. They 
 
 Hunting is a feature in Microsoft Defender XDR that uses a query-based threat-hunting interface to allow security teams proactively hunt for and detect advanced threats within their organization's environment. 
 <img width="917" height="713" alt="image" src="https://github.com/user-attachments/assets/6f56f339-8913-4ac6-b96a-2a1879b5c536" />
-*Key areas of the portal used for incident investigation, threat hunting, and security configuration.*
 
 ## 4. Investigating a Defense Evasion Incident
 
@@ -99,7 +95,6 @@ The query uses the `DeviceProcessEvents` table to search process creation teleme
 
 <img width="3051" height="927" alt="image" src="https://github.com/user-attachments/assets/a3e8a88d-ddd0-4dd6-8f80-1282f5f4d8c0" />
 
-*Advanced Hunting can help identify potentially suspicious process execution for further investigation.*
 
 ## 6. Mitigating Defense Evasion & Prevention
 
@@ -126,4 +121,4 @@ Microsoft Defender provides several controls that can help prevent or detect att
 
 
 
-> **Note**:*This write-up documents a guided TryHackMe learning exercise. Screenshots and investigation findings should reflect the actual lab environment and actions performed.*
+> **Note**:*This write-up documents a guided TryHackMe learning rooms about Defender XDR. Screenshots and investigation findings should reflect the actual lab environment and actions performed.*
