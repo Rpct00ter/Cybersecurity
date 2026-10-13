@@ -15,7 +15,7 @@ Microsoft Defender XDR integrates with security products such as:
 
 By correlating signals from these sources, Defender XDR helps security analysts investigate incidents, identify affected assets, hunt for threats, and coordinate response actions through a centralized portal.
 
-**<Screenshot of Microsoft Defender XDR home dashboard>**
+<img width="1917" height="953" alt="image" src="https://github.com/user-attachments/assets/c2a489c1-d854-4f5c-9d69-02f9f14a4e24" />
 
 *The Defender portal provides a centralized view of security incidents, alerts, and available investigation tools.*
 
@@ -28,23 +28,28 @@ Attackers may attempt to hide malicious activity, disable security tools, manipu
 Common Defense Evasion techniques include:
 
 - **Impair Defenses:** Attempting to disable antivirus, endpoint protection, or logging mechanisms.
-- **Masquerading:** Making malicious files, processes, or services appear legitimate.
+- **Masquerading:** Making malicious files, processes, or services appear legitimate. F.ex: Faking/Double file extensions, Altering file or processes names or Modifying code signatures.
 - **Obfuscated Files or Information:** Concealing malicious scripts or code to make analysis and detection more difficult.
 - **Timestomping:** Manipulating file timestamps to make suspicious activity harder to identify.
 - **Signed Binary Proxy Execution:** Abusing trusted, signed system binaries to execute malicious content.
+<img width="1202" height="673" alt="image" src="https://github.com/user-attachments/assets/c8057e6f-a6a6-4554-86b0-679c13922ef0" />
 
 Understanding these techniques helps security analysts recognize suspicious behavior and identify potential attempts to weaken an organization's defenses.
 
 ## 3. Exploring the Microsoft Defender Portal
 
-1. Sign in to the Microsoft Defender portal using the authorized lab account.
-2. Review the main navigation pane and locate **Incidents & alerts**, **Hunting**, and the product-specific sections.
-3. Open **Settings → Microsoft Defender XDR** to explore available configuration options.
-4. Review **Permissions and roles** to understand how security teams control access to incidents, investigations, and administrative settings.
-5. Check the available features and permissions in the lab tenant, as some capabilities depend on licensing and assigned roles.
+Microsoft Defender XDR unified role-based access control (RBAC) is a centralized permissions management system that streamlines access management across the Defender security ecosystem. It provides a single interface for administrators to manage who can access what across the Microsoft Defender XDR. It unifies access control across endpoints, identities, email, cloud apps, and data based on assigned roles and responsibilities. It can be activated in the "workload settings".
+<img width="1917" height="838" alt="image" src="https://github.com/user-attachments/assets/1d86db42-95e1-435a-b6ba-ed661f0a86f0" />
+<img width="635" height="779" alt="image" src="https://github.com/user-attachments/assets/f76dfd91-e78e-4a11-a8a1-2da20e741854" />
 
-**<Screenshot of Defender portal navigation pane>**
 
+
+Incidents are a collection of alerts related to a single threat or attack. They are confirmed security breaches or threats that have compromised an organization's assets, data, or systems.
+<img width="1920" height="952" alt="image" src="https://github.com/user-attachments/assets/a042c2f1-101c-4874-b419-f9330fda5e56" />
+<img width="1920" height="950" alt="image" src="https://github.com/user-attachments/assets/e71c355f-484c-4a84-9d03-6bce858a2667" />
+
+Hunting is a feature in Microsoft Defender XDR that uses a query-based threat-hunting interface to allow security teams proactively hunt for and detect advanced threats within their organization's environment. 
+<img width="917" height="713" alt="image" src="https://github.com/user-attachments/assets/6f56f339-8913-4ac6-b96a-2a1879b5c536" />
 *Key areas of the portal used for incident investigation, threat hunting, and security configuration.*
 
 ## 4. Investigating a Defense Evasion Incident
@@ -66,28 +71,23 @@ The lab material describes an example involving `reg.exe`, initiated by `cmd.exe
 
 This type of behavior is suspicious because attempts to weaken endpoint protection can create opportunities for further malicious activity. However, the alert should be investigated in context before concluding that the activity is malicious.
 
-**<Screenshot of the “Attempt to turn off Microsoft Defender Antivirus protection” incident>**
+<img width="1920" height="954" alt="image" src="https://github.com/user-attachments/assets/bfe7d492-9089-4eff-83b8-2a3018626183" />
+<img width="1522" height="890" alt="image" src="https://github.com/user-attachments/assets/94a0fc27-a272-458b-8c91-e477bb73c6da" />
+After investigation, if this alert is considered a malicious event, the following can be done on the device to mitigate the threat and prevent further escalation.
 
-*The incident overview identifies the affected device, user, severity, and related security alerts.*
+    Collect Investigation Package for further analysis.
+    Start Microsoft Defender XDR Automated Investigation.
+    Initiate Live Response Session to see the registry changes.
+    Isolate the device to prevent lateral movement or the attack from getting access to other devices.
+<img width="898" height="712" alt="image" src="https://github.com/user-attachments/assets/10de6e1c-e14f-4ca1-b0be-9d6588955319" />
 
-**<Screenshot of the alert timeline and initiating process details>**
-
-*The alert timeline provides process and command-line context that helps reconstruct the suspicious activity.*
 
 ## 5. Hunting for Potential Defense Evasion
 
-In addition to reviewing generated alerts, Microsoft Defender XDR provides **Advanced Hunting**, which allows analysts to search security telemetry using Kusto Query Language (KQL).
-
-This is useful when an alert has not already been generated or when an analyst wants to investigate whether similar behavior occurred elsewhere.
+In addition to reviewing generated alerts, Microsoft Defender XDR provides **Advanced Hunting**, which allows analysts to search security telemetry using Kusto Query Language (KQL). This is useful when an alert has not already been generated or when an analyst wants to investigate whether similar behavior occurred elsewhere.
 
 ### Example: Detecting a suspicious `svchost.exe` location
-
 `svchost.exe` is a legitimate Windows process. However, an executable with this name running from an unexpected directory may warrant investigation.
-
-1. Navigate to **Hunting → Advanced hunting**.
-2. Open the **Queries** section.
-3. Browse the community query templates and locate queries related to Defense Evasion.
-4. Run the following example query to identify `svchost.exe` process events recorded outside the standard Windows System32 directory.
 
 ```kusto
 DeviceProcessEvents
@@ -95,15 +95,13 @@ DeviceProcessEvents
 | where FolderPath !startswith "C:\\Windows\\System32"
 ```
 
-The query uses the `DeviceProcessEvents` table to search process creation telemetry.
+The query uses the `DeviceProcessEvents` table to search process creation telemetry. An unexpected file path is not proof of malicious activity. Review the process command line, parent process, device, user, file signature, and surrounding events before drawing conclusions.
 
-An unexpected file path is not proof of malicious activity. Review the process command line, parent process, device, user, file signature, and surrounding events before drawing conclusions.
-
-**<Screenshot of Advanced Hunting with the KQL query and results>**
+<img width="3051" height="927" alt="image" src="https://github.com/user-attachments/assets/a3e8a88d-ddd0-4dd6-8f80-1282f5f4d8c0" />
 
 *Advanced Hunting can help identify potentially suspicious process execution for further investigation.*
 
-## 6. Mitigating Defense Evasion
+## 6. Mitigating Defense Evasion & Prevention
 
 Microsoft Defender provides several controls that can help prevent or detect attempts to weaken security defenses.
 
@@ -113,13 +111,18 @@ Microsoft Defender provides several controls that can help prevent or detect att
 - **Least privilege:** Limits the ability of unauthorized users or processes to modify security configurations.
 - **Automated Investigation and Remediation:** Can investigate and remediate supported threats when the required configuration and licensing are available.
 
-For a practical exercise, I reviewed the Tamper Protection setting and the available endpoint security policies in the Defender portal.
+    Ensure the following Microsoft Defender for endpoint Attack Surface Reduction (ASR) Rules are in block mode to restrict Defense evasion activities.
 
-**<Screenshot of the Tamper Protection setting>**
+> **Note**: ASR rules are only supported on Windows operating systems.
 
-*Tamper Protection is an important safeguard against attempts to modify or disable security controls.*
+        Block Office applications from injecting code into other processes: To prevent common Defense Evasion techniques where malicious Office macros are injected into trusted processes.
+        Block execution of potentially obfuscated scripts: To prevent execution of highly obfuscated scripts from running.
+        Block untrusted and unsigned processes that run from USB: To prevent malware execution from removable drives, which is a common way to bypass security tools.
+        Block all Office applications from creating child processes: This will prevent malware from launching scripts or binaries through Office apps like Word or Excel files.
+        Block executable content from email and webmail: This will prevent users from running malicious attachments from campaigns that may lead to Defense Evasion.
+<img width="1526" height="539" alt="image" src="https://github.com/user-attachments/assets/1e5f6a84-ae59-4208-a433-863ddeb591cd" />
 
-Where permissions allow, suspicious incidents can also be investigated using additional evidence collection, automated investigation, Live Response, or device isolation. Response actions should be selected according to the incident's evidence and organizational procedures.
+
 
 
 
