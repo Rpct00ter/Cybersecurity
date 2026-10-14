@@ -26,7 +26,7 @@
 (Source of the challenge.)
 
 ## Scenario
-(Description of the initial situation and how the investigation was triggered.)
+(Description of the initial situation.)
 
 ## Tasks
 * Task 1
