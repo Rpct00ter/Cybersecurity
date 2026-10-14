@@ -1,10 +1,7 @@
-# Security Investigation - [MicrosoftSentinel-Investigation001]
+# Security Investigation - [MicrosoftSentinel-Investigation-001]
 
 ## Source
-(Source of the challenge.)
-
-## Description
-(Brief description of the security incident.)
+Try Hack Me - "MS Sentinel: Investigate" room
 
 ## Scenario
 (Description of the initial situation and how the investigation was triggered.)
