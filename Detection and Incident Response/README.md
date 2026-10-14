@@ -25,9 +25,6 @@
 ## Source
 (Source of the challenge.)
 
-## Description
-(Brief description of the security incident.)
-
 ## Scenario
 (Description of the initial situation and how the investigation was triggered.)
 
