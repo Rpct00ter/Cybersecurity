@@ -4,19 +4,18 @@
 Try Hack Me - "MS Sentinel: Investigate" room
 
 ## Scenario
-(Description of the initial situation and how the investigation was triggered.)
+In your company's Microsoft Sentinel environment, previously enabled Analytics rules started to generate incidents. You need to start triaging and investigating the incidents. First, review open incidents and take ownership. Then, investigate the incident. Finally, escalate the incident to SOC LVL 2 for in-depth investigation and threat hunting. You decided to take ownership of the Solorigate incident. You are logged in as: Microsoft Sentinel Contributor, Log Analytics Contributor. 
 
 ## Tasks
-* Task 1
-* Task 2
-* Task 3
+* What is the MITRE Tactics classification for Solorigate incidents?
+* Investigate the incident "Sign-ins from IPs that attempt sign-ins to disabled accounts". What is the IP entity involved in this incident?
+* Check out this IP's geolocation. What is the country?
+* Which disabled account was targeted by attackers?
+* How many login attempts were there for this disabled account?
 
 ## Tools & Technologies
-* [SIEM / Monitoring Tool]
-* [EDR / Security Tool]
-* [Network Analysis Tool]
-* [Threat Intelligence]
-* [Other relevant tools]
+* Microsoft Sentinel
+
 ----
 
 
