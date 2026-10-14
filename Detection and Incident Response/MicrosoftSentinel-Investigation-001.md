@@ -17,8 +17,13 @@ Try Hack Me - "MS Sentinel: Investigate" room
 * [Network Analysis Tool]
 * [Threat Intelligence]
 * [Other relevant tools]
+----
 
-## Investigation
+
+     
+
+
+# Investigation
 
 ### 1. Initial Alert / Detection
 
