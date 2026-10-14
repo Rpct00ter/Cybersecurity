@@ -1,14 +1,24 @@
 ---
 
 > ### Detection & Incident Response
-> This directory contains hands-on security investigations covering different security incidents, alerts, and defensive scenarios. Each and every investigation in this directory should follows the structure similar to the one that is shown below:
+> * This directory contains hands-on security investigations covering different security incidents, alerts, and defensive scenarios.
+> * Files inside this directory follow the naming rule below (Name of Incident or SIEM used in detection):
+>
+> ```text
+> └── Investigations/
+>     ├── Phishing-001/
+>     ├── Brute-Force-001/
+>     ├── Suspicious-PowerShell-001/
+>     ├── Splunk-Investigation-001/
+>     └── Network-Intrusion-001/
+> ```
+> * Each and every investigation in this directory should follows the structure similar to the one that is shown below:
 <h2 align="center">
 🦊 🦊 🦊
 </h2>
 
 <br>
 
-----
 
 # Security Investigation - [Investigation Name]
 
@@ -21,12 +31,10 @@
 ## Scenario
 (Description of the initial situation and how the investigation was triggered.)
 
-## Objectives
-* Identify the cause of the alert/incident
-* Determine whether the activity is malicious
-* Identify affected users, systems, and assets
-* Determine the scope and impact
-* Recommend appropriate response actions
+## Tasks
+* Task 1
+* Task 2
+* Task 3
 
 ## Tools & Technologies
 * [SIEM / Monitoring Tool]
@@ -51,7 +59,7 @@
 
 ### 4. Correlation
 
-(Correlate evidence from different sources and build the incident timeline. + some screenshots)
+(Build the incident timeline. + some screenshots)
 
 ### 5. Threat Intelligence
 
@@ -65,7 +73,7 @@
 
 ## Findings
 
-(Summarize what was discovered during the investigation.)
+(Quick summary)
 
 **Verdict:** True Positive / False Positive / Inconclusive
 
@@ -74,24 +82,7 @@
 **Affected Assets:** [Systems/users/assets]
 
 ## Response & Recommendations
-(Describe the recommended containment, remediation, and follow-up actions.)
 
 * [Action 1]
 * [Action 2]
 * [Action 3]
-
-## Lessons Learned
-(Briefly describe what the investigation demonstrated and what could be improved or monitored in the future.)
-
-----
-> ### Files inside this directory follow the naming rule below (Name of Incident or SIEM used in detection):
->
-> ```text
-> └── Investigations/
->     ├── Phishing-001/
->     ├── Brute-Force-001/
->     ├── Suspicious-PowerShell-001/
->     ├── Splunk-Investigation-001/
->     └── Network-Intrusion-001/
-> ```
----- 
