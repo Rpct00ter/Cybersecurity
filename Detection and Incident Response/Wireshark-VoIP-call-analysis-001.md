@@ -1,23 +1,22 @@
 # Security Investigation - [Investigation Name]
 
 ## Source
-(Source of the challenge.)
+Let's Defend
 
 ## Scenario
-(Description of the initial situation.)
+Your close friend James recently received a suspicious phone call from someone claiming to be his bank. The caller asked for sensitive information, making James uneasy. Suspecting a potential Vishing (Voice Phishing) attack, you decide to investigate by capturing and analyzing the VoIP traffic.
 
 ## Tasks
-* Task 1
-* Task 2
-* Task 3
+* How many RTP packets were in the traffic?
+* When did the fake call with James start?
+* What is the Jame's phone number?
+* How long was the call with the bank?
+* What is the phone number of the bank that James received a call from?
+* What is the name of the bank calling?
+* What is James's Social Number?
 
 ## Tools & Technologies
-* [SIEM / Monitoring Tool]
-* [EDR / Security Tool]
-* [Network Analysis Tool]
-* [Threat Intelligence]
-* [Other relevant tools]
-----
+* Wireshark
 
 
      
