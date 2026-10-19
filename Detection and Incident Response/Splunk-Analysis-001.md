@@ -20,9 +20,25 @@ Once you have the entry point, I want the persistence mechanism next, then trace
 
 ## Tasks
 * What is the first timestamp at which a non-macOS device signed into Marcus Webb's account?
+After checking UserAgent there can be clearly seen devices diffrent from Macintosh. As for a loggin event I suspected mainly 2 agents that used Chrome: Windows and Linux. After checking Linux, I didn't find any correlation to Marcus, but there was a bunch of logging alerts for diffrent user: David Chen". After checking Windows I found nice logs. In Operation field I selected "UserLoggedIn"
+<img width="595" height="635" alt="image" src="https://github.com/user-attachments/assets/814849a5-063e-418f-ac6b-5ce6a317fcab" />
+After some clicking my query looked like this:
+index=vantage  sourcetype="o365:management:activity" UserAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" Operation=UserLoggedIn ResultStatus=Success user_id="marcus.webb@vantagedynamics.onmicrosoft.com"
+<img width="464" height="865" alt="image" src="https://github.com/user-attachments/assets/9cd587b6-1a42-40bf-9d39-f3ddddf46009" />
+
+
 * Just after logging in, the attacker accessed a large number of emails within the first few minutes of the session. How many emails were accessed during this window?
+After I determined succesfull sign in of the attacker, I searched query "index=vantage Operation=MailItemsAccessed earliest="08/27/2026:12:28:00" UserId="marcus.webb@vantagedynamics.onmicrosoft.com""  and counted OperationCount Value to determin how many MailItems have been accessed:
+<img width="1008" height="739" alt="image" src="https://github.com/user-attachments/assets/921f1727-08b4-448f-8ccc-9efa0ca4f410" />
+
 * What subject line does the attacker's inbox rule match on?
+After searching "index=vantage earliest="08/27/2026:12:28:00" UserId="marcus.webb@vantagedynamics.onmicrosoft.com" Operation="New-InboxRule" we can see only one record and after analysis it shows value 'invoice'
+<img width="1025" height="640" alt="image" src="https://github.com/user-attachments/assets/ff2a2611-4fb0-4bd2-aecf-38cd17c3c54c" />
+
 * How much time elapsed between the malicious inbox rule being created and a matching reply email arriving in the mailbox?
+To see incoming messages my solution was to change the sourcetype in my query: index=vantage earliest="08/27/2026:12:28:00" sourcetype="o365:reporting:messagetrace"
+<img width="550" height="138" alt="image" src="https://github.com/user-attachments/assets/fbaa51de-0a88-4634-8ac0-c37d6a827589" />
+
 * Marcus Webb's account logged a Teams message that had a link attached to it. What file did this link reference?
 * What operating system was used in the suspicious sign-in to David Chen's account?
 * What IP address was used in this same sign-in?
