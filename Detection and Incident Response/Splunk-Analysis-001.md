@@ -38,11 +38,19 @@ After searching "index=vantage earliest="08/27/2026:12:28:00" UserId="marcus.web
 * How much time elapsed between the malicious inbox rule being created and a matching reply email arriving in the mailbox?
 To see incoming messages my solution was to change the sourcetype in my query: index=vantage earliest="08/27/2026:12:28:00" sourcetype="o365:reporting:messagetrace"
 <img width="550" height="138" alt="image" src="https://github.com/user-attachments/assets/fbaa51de-0a88-4634-8ac0-c37d6a827589" />
+<img width="998" height="881" alt="image" src="https://github.com/user-attachments/assets/b285858d-3cfd-4a03-8383-1194f0dcb366" />
 
 * Marcus Webb's account logged a Teams message that had a link attached to it. What file did this link reference?
+The MessageCreatedHasALink occured only once which can be seen in a log visualisation. To check it I put it in a query:"index=vantage earliest="08/27/2026:12:28:00" Operation="MessageCreatedHasLink""
+<img width="998" height="881" alt="image" src="https://github.com/user-attachments/assets/a79067b4-6e29-4e67-9f50-a4edacb027af" />
+
 * What operating system was used in the suspicious sign-in to David Chen's account?
 * What IP address was used in this same sign-in?
+After filtering the previously noticed Linux device that is not matchin company policy, setting appropriate timestamp and setting Operation to "UserLoggedIn" I was able to determine ClientIp.
+<img width="418" height="547" alt="image" src="https://github.com/user-attachments/assets/b9d2cc8c-a058-45b0-9796-5995d3662179" />
+
 * How much time passed between this message being created and the suspicious sign-in to David Chen's account?
+It was between 1:27PM and
 * The file the attacker downloaded from David Chen's account was legitimately modified earlier that day. At what time?
 * What file stored on the Leadership site had a sensitivity label applied to it by the organization's data governance, prior to the incident?
 * What file did the attacker create an external sharing link for?
