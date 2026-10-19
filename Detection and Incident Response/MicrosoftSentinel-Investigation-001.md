@@ -1,5 +1,6 @@
 # Security Investigation - [MicrosoftSentinel-Investigation-001]
 
+## THE ROOM IS INCOMPLETED, BECAUSE OF DEPLOYMENT ISSUES ON AZURE PORTAL. WRITEUP WILL BE COMPLETED AFTER FIX.
 ## Source
 Try Hack Me - "MS Sentinel: Investigate" room
 
