@@ -2,8 +2,7 @@
 # Security Investigation - [Investigation Name]
 
 ## Source
-(Source of the challenge.)
-
+TryHackMe: The O365 Intrusion Challenge
 ## Scenario
 You have been brought on at Security Services THM Security Service (TSS). Vantage Dynamics' IT team escalated a report from their Accounts Payable department on 27 August. An employee, Marcus Webb, noticed a colleague referencing a document tied to his account that he had no memory of sending. Around the same time, a second employee's account, David Chen, began showing signs of unusual activity of its own. Vantage has not made any changes to either account and has handed over sign-in and activity logs from the day of the incident. TSS has been engaged to determine how the intrusion began, how it spread between accounts, and whether any sensitive data left the organization.  
 
