@@ -47,10 +47,9 @@ The MessageCreatedHasALink occured only once which can be seen in a log visualis
 * What operating system was used in the suspicious sign-in to David Chen's account?
 * What IP address was used in this same sign-in?
 After filtering the previously noticed Linux device that is not matchin company policy, setting appropriate timestamp and setting Operation to "UserLoggedIn" I was able to determine ClientIp.
-<img width="418" height="547" alt="image" src="https://github.com/user-attachments/assets/b9d2cc8c-a058-45b0-9796-5995d3662179" />
+<img width="418" height="547" alt="image" src="https://github.com/user-attachments/assets/75803f6a-472d-4d85-ba90-ecdc13cb723c" />
 
 * How much time passed between this message being created and the suspicious sign-in to David Chen's account?
-It was between 1:27PM and
 * The file the attacker downloaded from David Chen's account was legitimately modified earlier that day. At what time?
 * What file stored on the Leadership site had a sensitivity label applied to it by the organization's data governance, prior to the incident?
 * What file did the attacker create an external sharing link for?
