@@ -92,6 +92,13 @@ After filtering logs by sourcetype, specifically message trace, I filtered recip
 Final record with a message look like this:
 <img width="1002" height="454" alt="image" src="https://github.com/user-attachments/assets/f4bba8e9-1e30-4ca5-8d1a-34dcd06b2651" />
 
+
+
+After solving challenges and investigating the logs there is a clear correlation of attacks and this is how the attack was occured step by step:
+1
+2
+3...
+
 ## Tools & Technologies
 * Splunk
 ----
