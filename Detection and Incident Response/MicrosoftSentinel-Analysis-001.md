@@ -1,4 +1,4 @@
-# Security Investigation - [MicrosoftSentinel-Investigation-001]
+# Security Investigation - [MicrosoftSentinel-Analysis-001]
 
 ## THE ROOM IS INCOMPLETED, BECAUSE OF DEPLOYMENT ISSUES ON AZURE PORTAL. WRITEUP WILL BE COMPLETED AFTER FIX.
 ## Source
