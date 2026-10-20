@@ -80,7 +80,17 @@ Logically to create an extrenal sharing link,first an invitation should be creat
 <img width="1379" height="489" alt="image" src="https://github.com/user-attachments/assets/6f2cbb37-f829-4295-a624-70c0b0ff5d54" />
 
 * What external email address was granted access to this file?
+For this one I used query: "index=vantage Operation=SharingSet UserId="david.chen@vantagedynamics.onmicrosoft.com"" to find any changes in Sharing Permissions made by compromised account. There indeed was Permission to Contibute granted and it was granted for someone with original mail d.reynolds88@protonmail.com.
+
+<img width="1096" height="626" alt="image" src="https://github.com/user-attachments/assets/360d7256-bca7-425e-8ec3-49ac19494886" />
+Not only that but the user was also added:
+<img width="722" height="563" alt="image" src="https://github.com/user-attachments/assets/83b97746-f59b-4453-8387-87d05fb2a091" />
+
 * According to the emails, what is the subject line of the notification sent to this external address by the sharing application?
+After filtering logs by sourcetype, specifically message trace, I filtered recipients to show only suspicious email.
+<img width="668" height="273" alt="image" src="https://github.com/user-attachments/assets/9f730e97-7b3a-4d2e-82cd-278ddc50f065" />
+Final record with a message look like this:
+<img width="1002" height="454" alt="image" src="https://github.com/user-attachments/assets/f4bba8e9-1e30-4ca5-8d1a-34dcd06b2651" />
 
 ## Tools & Technologies
 * Splunk
