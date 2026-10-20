@@ -9,7 +9,7 @@
 >     ├── Phishing-001/
 >     ├── Brute-Force-001/
 >     ├── Suspicious-PowerShell-001/
->     ├── Splunk-Investigation-001/
+>     ├── Splunk-Analysis-001/
 >     └── Network-Intrusion-001/
 > ```
 > * Each and every investigation in this directory should follows the structure similar to the one that is shown below:
