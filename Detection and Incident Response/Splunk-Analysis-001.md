@@ -66,6 +66,19 @@ index=vantage Operation=FileSensitivityLabelApplied
 <img width="1379" height="489" alt="image" src="https://github.com/user-attachments/assets/6d43de3e-54d9-4bbc-a92e-e2b09d57ae5b" />
 
 * What file did the attacker create an external sharing link for?
+First I ran: 
+"index=vantage
+| stats count by Operation" to see if there were any operations related to creating external sharing link.
+
+It showed:
+SharingInheritanceBroken	3
+SharingInvitationCreated	1
+SharingLinkUpdated	1
+SharingLinkUsed	2
+SharingSet
+Logically to create an extrenal sharing link,first an invitation should be created. There is simply only one situation logged of that instance.
+<img width="1379" height="489" alt="image" src="https://github.com/user-attachments/assets/6f2cbb37-f829-4295-a624-70c0b0ff5d54" />
+
 * What external email address was granted access to this file?
 * According to the emails, what is the subject line of the notification sent to this external address by the sharing application?
 
