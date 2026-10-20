@@ -51,7 +51,20 @@ After filtering the previously noticed Linux device that is not matchin company 
 
 * How much time passed between this message being created and the suspicious sign-in to David Chen's account?
 * The file the attacker downloaded from David Chen's account was legitimately modified earlier that day. At what time?
+First I need to find the file downloaded by David Chen. To find the name I used the query below:
+"index=vantage Operation=FileDownloaded
+|  table _time ClientIP action Operation UserId ObjectId"
+
+There was a file downloaded indeed named "Q4_Board_Financial_Summary.xls". I changed the Operation to file modified and there it was:
+<img width="1377" height="427" alt="image" src="https://github.com/user-attachments/assets/9f321066-597a-48bf-ae6e-9a355238b5e5" />
+
+
 * What file stored on the Leadership site had a sensitivity label applied to it by the organization's data governance, prior to the incident?
+By applying filter to show which files had sensitivity applied, Splunk shows only 2 logs showint this operation, but only one refers the file on Leadership site. The query used:
+index=vantage Operation=FileSensitivityLabelApplied
+|  table _time ClientIP action Operation UserId ObjectId
+<img width="1379" height="489" alt="image" src="https://github.com/user-attachments/assets/6d43de3e-54d9-4bbc-a92e-e2b09d57ae5b" />
+
 * What file did the attacker create an external sharing link for?
 * What external email address was granted access to this file?
 * According to the emails, what is the subject line of the notification sent to this external address by the sharing application?
