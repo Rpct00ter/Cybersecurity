@@ -19,3 +19,6 @@ timestamp:10/20/2026 13:50:50.522
 Action:blocked
 SourceIP:10.20.2.17
 DestinationIP:67.199.248.11
+
+I filled the documentation and escalated the alert:
+<img width="1677" height="856" alt="image" src="https://github.com/user-attachments/assets/e519d2f5-312e-4f0d-bce8-ef2fa0a3ed09" />
