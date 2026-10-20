@@ -99,6 +99,17 @@ After solving challenges and investigating the logs there is a clear correlation
 2
 3...
 
+Who was affected:
+1
+2
+3
+
+What to do:
+1
+2
+3
+
+
 ## Tools & Technologies
 * Splunk
 ----
