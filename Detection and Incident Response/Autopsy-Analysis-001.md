@@ -1,6 +1,9 @@
 Your task is to perform a manual analysis of the artifacts discovered by Autopsy to answer the questions below.
 
-
+Odpalenie autopsy.
+<img width="1211" height="711" alt="image" src="https://github.com/user-attachments/assets/c64e6db9-f529-47b9-a92e-49d4ac7e191e" />
+Connected to the VM, added specific disk for an analysis. 
+<img width="1211" height="711" alt="image" src="https://github.com/user-attachments/assets/1c1ef8dd-8252-460d-901c-7604aee9077a" />
 
 
 What is the MD5 hash of the E01 image?
