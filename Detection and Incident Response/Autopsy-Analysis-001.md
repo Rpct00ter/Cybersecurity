@@ -5,12 +5,19 @@ Odpalenie autopsy.
 Connected to the VM, added specific disk for an analysis. 
 <img width="1211" height="711" alt="image" src="https://github.com/user-attachments/assets/1c1ef8dd-8252-460d-901c-7604aee9077a" />
 
+Succesfull extraction of an image:
+<img width="1211" height="711" alt="image" src="https://github.com/user-attachments/assets/b95dac2f-9f69-4d1f-abf5-e1e2e2694032" />
+
+Files are being analyzded, The first thing that I checked because it fully loaded were all operating system accounts. The list shows 8 user accounts: H4S4N,joshwa,keshav,sandhya,shreya,sivapriya,srini,suba and 4 Default System Accounts.
+<img width="1211" height="725" alt="image" src="https://github.com/user-attachments/assets/cda086b3-cc21-4c62-b328-36ed51a58649" />
+(better screenshot can be made, because not fully analyzed data is presented)
 
 What is the MD5 hash of the E01 image?
 
 What is the computer account name?
 
 List all the user accounts. (alphabetical order)
+H4S4N,joshwa,keshav,sandhya,shreya,sivapriya,srini,suba
 
 Who was the last user to log into the computer?
 
