@@ -3,7 +3,7 @@
 ## Source
 TryHackMe: [The O365 Intrusion Challenge](https://tryhackme.com/room/theo365intrusion)  
 ## Scenario
-Microsoft 365 (O365) intrusions commonly begin with stolen credentials—often through phishing, fake sign-in pages, password reuse, or session-token theft. Once inside, an attacker may read email, create mailbox rules to hide or target messages, abuse collaboration tools, access cloud files, and share sensitive data externally. Consequences can include business-email compromise, fraud, exposure of confidential documents, and persistent unauthorized access.
+Microsoft 365 (O365) intrusions commonly begin with stolen credentials-often through phishing, fake sign-in pages, password reuse, or session-token theft. Once inside, an attacker may read email, create mailbox rules to hide or target messages, abuse collaboration tools, access cloud files, and share sensitive data externally. Consequences can include business-email compromise, fraud, exposure of confidential documents, and persistent unauthorized access.
 
 Vantage Dynamics escalated suspicious activity involving Marcus Webb and David Chen on 27 August 2026. The investigation uses Splunk logs from `index=vantage` to identify the entry point, mailbox persistence, movement to a second identity, and possible data exposure.
 
@@ -134,12 +134,12 @@ The UserAgent screenshot also shows common macOS Chrome traffic, plus Windows an
 
 ### 5. Threat Intelligence
 
-- `185.220.101.47` — source IP for Marcus’s suspicious Windows sign-in.
-- `91.219.237.88` — source IP for David’s suspicious Linux sign-in.
-- `d.reynolds88@protonmail.com` — external identity granted access to the shared document.
-- `Meridian_Invoice_Batch_Aug2026.pdf` — file linked in the Teams message.
-- `Q4_Board_Financial_Summary.xlsx` — sensitive Leadership-site workbook.
-- `Vendor_Onboarding_Notes.docx` — document shared externally.
+- `185.220.101.47` - source IP for Marcus’s suspicious Windows sign-in.
+- `91.219.237.88` - source IP for David’s suspicious Linux sign-in.
+- `d.reynolds88@protonmail.com` - external identity granted access to the shared document.
+- `Meridian_Invoice_Batch_Aug2026.pdf` - file linked in the Teams message.
+- `Q4_Board_Financial_Summary.xlsx` - sensitive Leadership-site workbook.
+- `Vendor_Onboarding_Notes.docx` - document shared externally.
 
 These are incident indicators derived from the lab logs. This report does not assert a verified reputation or attribution for either IP address. Check them against current threat-intelligence sources and tenant sign-in context before operational blocking.
 
@@ -158,7 +158,7 @@ These are incident indicators derived from the lab logs. This report does not as
 The evidence supports a **true-positive Microsoft 365 account intrusion** involving Marcus Webb and David Chen. The attacker used an unexpected Windows sign-in for Marcus, accessed mailbox content, created an invoice-matching inbox rule, and later activity was observed from an unexpected Linux sign-in to David’s account. The investigation also found access to a sensitive Leadership workbook and external sharing of a second document.
 
 **Verdict:** True Positive  
-**Severity:** High — sensitive business documents and two identities are involved; confirm data access/exfiltration scope during response.  
+**Severity:** High - sensitive business documents and two identities are involved; confirm data access/exfiltration scope during response.  
 **Affected assets:**  
 - `marcus.webb@vantagedynamics.onmicrosoft.com`
 - `david.chen@vantagedynamics.onmicrosoft.com`
@@ -171,7 +171,7 @@ The evidence supports a **true-positive Microsoft 365 account intrusion** involv
 1. **Initial access observed:** Marcus Webb’s account successfully signs in from Windows 10 Chrome, contrary to the organization’s managed-MacBook baseline. The event detail shows `12:28:17`; the external walkthrough’s challenge answer is `12:28:31`, so verify the exact event timestamp in Splunk.
 2. **Mailbox reconnaissance:** `MailItemsAccessed` events follow the sign-in; the challenge reports 22 emails accessed in the initial window.
 3. **Mailbox persistence/targeting:** At `12:30:10`, a new inbox rule matches the word `invoice`, potentially targeting payment-related correspondence.
-4. **Business email context:** At `12:41:09`, a reply with subject `RE: Meridian invoice batch - please confirm` arrives—10 minutes 59 seconds after the rule was created.
+4. **Business email context:** At `12:41:09`, a reply with subject `RE: Meridian invoice batch - please confirm` arrives-10 minutes 59 seconds after the rule was created.
 5. **Collaboration activity:** At `13:03:38`, Marcus’s Teams account creates a message containing a link to `Meridian_Invoice_Batch_Aug2026.pdf`.
 6. **Second identity appears:** At `13:27:04`, David Chen signs in successfully from Linux at `91.219.237.88`, 23 minutes 26 seconds after the Teams message.
 7. **Sensitive file involved:** `Q4_Board_Financial_Summary.xlsx` on the Leadership SharePoint site was modified at `08:27:03` and had a sensitivity label applied. The available screenshots show the file’s legitimate modification/label activity, but the precise attacker download event should be confirmed in the complete audit log.
