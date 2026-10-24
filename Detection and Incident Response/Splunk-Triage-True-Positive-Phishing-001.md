@@ -1,29 +1,122 @@
-Source:
-Try Hack Me SOC Simulator
+# Security Investigation - Phishing Alert
 
-1.) I assigned myself an alert:
-<img width="1916" height="959" alt="image" src="https://github.com/user-attachments/assets/f0000307-9df9-4a07-b1fe-2cef182f7c09" />
+## Source
+TryHackMe - SOC Simulator
 
-I enter Splunk to find the log that was responsible for the alert:
-"index = *
-| search recipient = "j.garcia@thetrydaily.thm"
-<img width="1916" height="959" alt="image" src="https://github.com/user-attachments/assets/cf157542-afb9-487c-8119-ead1f9ebaa41" />
+## Scenario
+Alert `8817` flagged an inbound email claiming unusual Microsoft account sign-in activity. The investigation confirmed a suspicious link and found a firewall event showing that an internal host connected to the destination.
 
-After quick analysis, the email is certainly a phishing attempt. It tries to persuade recipient to open microsoft support impersonating site: <https://m1crosoftsupport.co/login>
-Additionaly the sender is < no-reply@m1crosoftsupport.co> which is not official microsoft email address (additionally it has a typo: m1crosoft instead of microsoft).
+## Tools & Technologies
+- SOC Simulator
+- Splunk
+- Firewall event logs
 
-Alert is definetely true-positive.
+---
 
-Because of my queue it is clear that there was no other phishing attempts made from the sender email address. I would reccomand to add it's domain to the black list.
+# Investigation
 
-To fully analyze the alert I'm determining the scope of exposure I'm checking if any log exposes actions related to malicios site with the simple query: index = * m1crosoftsupport.co
-Unfortunately, someone did enter the malicious website:
-<img width="753" height="682" alt="image" src="https://github.com/user-attachments/assets/bffa6218-5202-439b-8614-6762f944345b" />
+### 1. Initial Alert / Detection
 
-The event occured on 10/20/26 12:53:03.522 PM and connection was made from IP Address: 10.20.2.25. Considering this is the only outband connection to the malicious website which I checked using "index = * DestinationIP="45.148.10.131"" query, there is very high probablity that c.allen@thetrydaily.thm was compromised.
+| Field | Value |
+|---|---|
+| Alert ID | `8817` |
+| Rule | Inbound Email Containing Suspicious External Link |
+| Severity | Medium |
+| Sender | `no-reply@m1crosoftsupport.co` |
+| Recipient | `c.allen@thetrydaily.thm` |
+| Subject | `Unusual Sign-In Activity on Your Microsoft Account` |
+| Email timestamp | `2026-10-20 12:51:54.522` |
+| URL | `https://m1crosoftsupport.co/login` |
 
-I would reccomand identifying the host and user associated with 10.20.2.25; review DNS, web proxy, endpoint, and authentication logs for related activity. Contact the user to verify whether they visited the site or entered credentials. Block the malicious domain and URL where appropriate. If credential exposure is suspected, reset credentials, revoke active sessions, and investigate suspicious sign-ins.
+<img src="https://github.com/user-attachments/assets/f0000307-9df9-4a07-b1fe-2cef182f7c09" width="650" alt="SOC Simulator alert 8817">
 
-There is my documentation and alert is escalated:
-<img width="1898" height="850" alt="image" src="https://github.com/user-attachments/assets/30b363be-85bc-4e87-bb94-4ccb897f8407" />
-Alert is closed
+### 2. Triage
+
+I searched Splunk for the recipient:
+
+```spl
+index=*
+| search recipient="j.garcia@thetrydaily.thm"
+```
+
+The supplied email event instead identifies the recipient as `c.allen@thetrydaily.thm`. The query shown in the screenshot searches for `j.garcia@thetrydaily.thm`, so the query and the displayed event do not match. The sender search below returned the email event:
+
+```spl
+index=*
+| search sender="no-reply@m1crosoftsupport.co"
+```
+
+<img src="https://github.com/user-attachments/assets/cf157542-afb9-487c-8119-ead1f9ebaa41" width="650" alt="Splunk email event">
+
+The message impersonates Microsoft account security and uses `m1crosoftsupport.co`, substituting the numeral `1` for the letter `i`. This is a strong phishing indicator.
+
+### 3. Evidence Analysis
+
+A broader search for the domain found a firewall event:
+
+```spl
+index=* m1crosoftsupport.co
+```
+
+The firewall event recorded an allowed HTTPS connection to `https://m1crosoftsupport.co/login`.
+
+| Field | Value |
+|---|---|
+| Time | `2026-10-20 12:53:03.522` |
+| Source IP | `10.20.2.25` |
+| Destination IP | `45.148.10.131` |
+| Destination port | `443` |
+| Action | `allowed` |
+| URL | `https://m1crosoftsupport.co/login` |
+
+<img src="https://github.com/user-attachments/assets/bffa6218-5202-439b-8614-6762f944345b" width="520" alt="Firewall event for the suspicious URL">
+
+The connection occurred about 1 minute and 9 seconds after the email event. This confirms that a connection to the suspicious URL was allowed from the internal source IP. It does **not** establish that credentials were entered or that the account was compromised.
+
+I also searched for the destination IP:
+
+```spl
+index=* DestinationIP="45.148.10.131"
+```
+
+The investigation notes indicate this was the only matching outbound connection found in the available data.
+
+### 4. Correlation
+
+- **12:51:54.522:** suspicious email received by `c.allen@thetrydaily.thm`.
+- **12:53:03.522:** firewall logged an allowed HTTPS connection from `10.20.2.25` to the phishing URL's destination IP.
+
+The close timing is consistent with a recipient or user visiting the link, but the logs shown do not directly link the mailbox to source IP `10.20.2.25`.
+
+### 5. Threat Intelligence
+
+The supplied evidence identifies the lookalike domain and destination IP, but does not include a confirmed reputation result from an external threat-intelligence service. The phishing assessment is based on the message content, domain typo, and observed connection.
+
+### 6. MITRE ATT&CK
+
+| Technique | ID | Evidence |
+|---|---|---|
+| Phishing: Spearphishing Link | T1566.002 | Email attempts to direct the recipient to a lookalike Microsoft sign-in page. |
+
+No evidence provided confirms credential theft, account compromise, or subsequent attacker activity.
+
+## Findings
+
+The email is a **true-positive phishing alert**. Splunk also shows an allowed HTTPS connection to the suspicious URL from `10.20.2.25`. This raises concern that the link was visited, but compromise remains unconfirmed.
+
+**Verdict:** True Positive
+
+**Severity:** Medium (original alert severity); escalate for investigation of the observed connection.
+
+**Affected entities:** `c.allen@thetrydaily.thm`; source IP `10.20.2.25`; destination `45.148.10.131`; domain `m1crosoftsupport.co`.
+
+<img src="https://github.com/user-attachments/assets/30b363be-85bc-4e87-bb94-4ccb897f8407" width="650" alt="Submitted case report for alert 8817">
+
+## Response & Recommendations
+
+- Block `m1crosoftsupport.co` and the phishing URL through appropriate DNS, proxy, and web-filter controls.
+- Identify the host and user associated with `10.20.2.25`; correlate DNS, proxy, endpoint, and authentication logs around `12:53:03`.
+- Contact the user to establish whether the page was opened and credentials were submitted.
+- If credentials may have been exposed, reset them, revoke active sessions, and review sign-in activity.
+- Search for other messages containing the sender, domain, URL, or destination IP and remove/quarantine related emails where possible.
+- Keep the incident escalated until the connection's context and potential credential exposure have been assessed.
