@@ -43,15 +43,14 @@ Operation=UserLoggedIn ResultStatus=Success
 UserId="marcus.webb@vantagedynamics.onmicrosoft.com"
 ```
 
-The event shows `UserLoggedIn`, `ResultStatus=Success`, Windows 10, and source IP `185.220.101.47`. The event detail screenshot displays a timestamp of `2026-08-27 12:28:17`; the walkthrough gives the challenge answer as `2026-08-27 12:28:31`. Treat this small timestamp discrepancy as a validation point when reproducing the query and selecting the first qualifying event.
-
+The event shows `UserLoggedIn`, `ResultStatus=Success`, Windows 10, and source IP `185.220.101.47`. The event detail screenshot displays a timestamp of `2026-08-27 12:28:17`;
 <img width="520" alt="Marcus Webb successful non-macOS sign-in query" src="https://github.com/user-attachments/assets/9cd587b6-1a42-40bf-9d39-f3ddddf46009" />
 
 ### 3. Evidence Analysis
 
 **Mailbox access and persistence**
 
-After the suspicious sign-in, `MailItemsAccessed` events appeared for Marcus. The challenge walkthrough reports **22 emails accessed** in the initial window. One displayed event has `OperationCount=6`; this is an event-level count, not the total across the window.
+After the suspicious sign-in, `MailItemsAccessed` events appeared for Marcus. One displayed event has `OperationCount=6`. After summarazing the `OperationCount` from other events the final sum was 22.
 
 ```spl
 index=vantage Operation=MailItemsAccessed
@@ -168,7 +167,7 @@ The evidence supports a **true-positive Microsoft 365 account intrusion** involv
 - External identity `d.reynolds88@protonmail.com`
 
 **Roadmap**:
-1. **Initial access observed:** Marcus Webb’s account successfully signs in from Windows 10 Chrome, contrary to the organization’s managed-MacBook baseline. The event detail shows `12:28:17`; the external walkthrough’s challenge answer is `12:28:31`, so verify the exact event timestamp in Splunk.
+1. **Initial access observed:** Marcus Webb’s account successfully signs in from Windows 10 Chrome, contrary to the organization’s managed-MacBook baseline. The event detail shows `12:28:17`.
 2. **Mailbox reconnaissance:** `MailItemsAccessed` events follow the sign-in; the challenge reports 22 emails accessed in the initial window.
 3. **Mailbox persistence/targeting:** At `12:30:10`, a new inbox rule matches the word `invoice`, potentially targeting payment-related correspondence.
 4. **Business email context:** At `12:41:09`, a reply with subject `RE: Meridian invoice batch - please confirm` arrives-10 minutes 59 seconds after the rule was created.
