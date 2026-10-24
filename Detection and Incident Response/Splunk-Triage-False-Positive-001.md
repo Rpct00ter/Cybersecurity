@@ -1,4 +1,4 @@
-# Security Investigation - Splunk-Possible Phishing
+# Security Investigation - Phishing alert
 
 ## Source
 TryHackMe - SOC Simulator
