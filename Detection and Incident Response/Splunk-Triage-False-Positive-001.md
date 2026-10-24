@@ -1,7 +1,7 @@
-# Security Investigation - Splunk-Triage-False-Positive
+# Security Investigation - Splunk-Possible Phishing
 
 ## Source
-TryHackMe — SOC Simulator
+TryHackMe - SOC Simulator
 
 ## Scenario
 Alert `8814`, **Inbound Email Containing Suspicious External Link**, flagged an inbound onboarding email as Medium-severity phishing. I reviewed the email and related Splunk events, then checked the domain and URL in threat-intelligence services.
