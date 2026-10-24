@@ -132,19 +132,6 @@ The recipient's other messages made the onboarding explanation plausible, but th
 Additionally I checked domain reputation to check for correlation between sender and receiver e-mail, but supposedly because of inner character of SOC Simulation there was no registry for this domain. Additionaly URL shown in the message doesn't raise any suspicions in Virustotal, because it can't find the URL (its possible that the URL was generated for SOC Simulation):
 <img width="1050" height="229" alt="image" src="https://github.com/user-attachments/assets/2fa3b884-ed84-4500-95d8-4d136321ea01" />
 
-### Missing evidence / recommended validation
-
-The supplied notes do not include results for the following checks. They should therefore be treated as **not verified**, rather than as clean results:
-
-- Email authentication and header review (for example, SPF, DKIM, and DMARC results where available).
-- Domain registration, ownership, and reputation for `hrconnex.thm`.
-- URL analysis in an approved, isolated environment.
-- Proxy, DNS, firewall, or endpoint telemetry showing whether the URL was accessed.
-- Whether a connection was allowed or blocked.
-- Whether the destination requested credentials or collected sensitive information.
-- Independent confirmation from the organization's HR/onboarding team.
-
-Do not visit a suspicious URL directly from a normal workstation. If further validation is required, use the organization's approved security tooling and safe-analysis procedures.
 
 ## 4. Correlation
 
@@ -161,36 +148,17 @@ The screenshots show more than one timestamp for the same event. The table below
 | During the investigation | Alert 8815 appeared in the queue with the same rule and Medium severity. | Alert queue |
 | After review | Alert 8814 was classified as a false positive in the lab and the alert was closed. | Closure and case-report screenshots |
 
-**Timestamp note:** The queue, case report, and event fields appear to use different displayed times. Confirm the lab's timezone and timestamp semantics before constructing a definitive chronology. The screenshots are not enough to establish whether this is a timezone conversion, a display inconsistency, or a difference between event and detection times.
-
 ### Correlation result
 
 The sender search identified the email event matching the alert's sender, and the recipient search returned other messages addressed to the same recipient. No supplied screenshot demonstrates a related URL connection, endpoint execution, credential submission, or other post-delivery activity.
 
 ## 5. Threat Intelligence
 
-No threat-intelligence lookups or URL-reputation results were included in the supplied notes.
-
-The following indicators were identified from the event and could be investigated using approved threat-intelligence sources:
-
-| Indicator | Type | Status |
-|---|---|---|
-| `hrconnex.thm` | Domain | Reputation/ownership not checked in the supplied evidence. |
-| `https://hrconnex.thm/onboarding/1540065406/j.garcia` | URL | Not shown as detonated or reputation-checked. |
-| `onboarding@hrconnex.thm` | Sender address | Authenticity not independently verified. |
-| `10.10.160.225:8989` | Host/port shown in Splunk metadata | Role not established; do not assume it is the destination URL's server. |
-
-The `.thm` names and private-address context appear consistent with a lab environment. Do not infer that these are public, real-world indicators or that a reputation lookup would be meaningful outside the simulation.
+No threat-intelligence lookups or URL-reputation results.
 
 ## 6. MITRE ATT&CK
 
-The alert concerns a potentially suspicious inbound email, but the available evidence does not confirm malicious activity. The following mapping is therefore **provisional**.
-
-| Technique | ID | Evidence |
-|---|---|---|
-| Phishing: Spearphishing Link | [T1566.002](https://attack.mitre.org/techniques/T1566/002/) | The email contained an external onboarding link and triggered a suspicious-link alert. Malicious intent was not independently confirmed. |
-
-This technique should be retained only if it accurately represents the lab's intended classification. If the message is ultimately verified as legitimate, the alert alone should not be treated as proof that the technique occurred.
+The alert concerns a potentially suspicious inbound email, but the available evidence does not confirm malicious activity. 
 
 ## Findings
 
@@ -230,14 +198,7 @@ This reflects the analyst's lab decision. Because sender/domain similarity and c
 - Submitted the case report and closed the alert.
 
 ### Recommended follow-up in a real SOC
-
-1. **Validate the sender and domain.** Review full email headers and authentication results; verify the onboarding domain through a trusted, independent source.
-2. **Inspect the URL safely.** Use approved URL-reputation and sandbox tooling rather than opening it on a standard workstation.
-3. **Check network telemetry.** Search DNS, proxy, firewall, and endpoint logs for requests to the destination and determine whether they were allowed or blocked.
-4. **Check for user impact.** If the link was visited, investigate redirects, credential entry, downloads, and subsequent endpoint or identity activity.
-5. **Preserve evidence.** Retain the original email, headers, relevant event records, timestamps, and query results according to the organization's evidence-handling process.
-6. **Document uncertainty.** If authenticity cannot be established, keep the case inconclusive or escalate it instead of treating plausible wording as sufficient proof of a false positive.
-7. **Review alert 8815 separately.** It appeared while alert 8814 was being investigated. Do not assume it has the same cause or verdict merely because it shares the same alert rule.
+-
 
 ### Splunk queries used
 
