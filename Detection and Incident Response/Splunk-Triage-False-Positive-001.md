@@ -1,217 +1,97 @@
-# Security Investigation - Introduction to Phishing
+# Security Investigation - Splunk-Triage-False-Positive
 
 ## Source
-TryHackMe — SOC simulator
+TryHackMe — SOC Simulator
 
 ## Scenario
-
-The SOC alert queue generated an alert named **Inbound Email Containing Suspicious External Link**. The alert was categorized as **Phishing** with **Medium** severity. The investigation required reviewing the email evidence and searching the available Splunk events to decide whether the alert represented a true or false positive. 
-
-## Tasks
-- Decide whether the alert is a true positive or false positive based on available evidence.
+Alert `8814`, **Inbound Email Containing Suspicious External Link**, flagged an inbound onboarding email as Medium-severity phishing. I reviewed the email and related Splunk events, then checked the domain and URL in threat-intelligence services.
 
 ## Tools & Technologies
-
-- **TryHackMe SOC simulation** - alert queue, alert assignment, and case reporting
-- **Splunk** - search and review events
-- **ICANN Lookup** - used for email domain analysis
-- **Virustotal** - used for URL analysis
+- Splunk
+- ICANN Lookup
+- VirusTotal
 
 ---
 
 # Investigation
 
-## 1. Initial Alert / Detection
-
-The alert queue showed the following alert:
+### 1. Initial Alert / Detection
 
 | Field | Value |
 |---|---|
 | Alert ID | `8814` |
-| Alert rule | Inbound Email Containing Suspicious External Link |
-| Severity | Medium |
-| Type | Phishing |
-| Queue date | October 20, 2026, 13:48 (as displayed by the lab) |
-| Status at discovery | Awaiting action |
-
-The alert description said an inbound email contained one or more external links with potentially suspicious characteristics. It recommended checking firewall or proxy logs to determine whether endpoints attempted to access the URLs and whether those connections were allowed or blocked.
-
-### Email details
-
-| Field | Observed value |
-|---|---|
-| Datasource | `email` |
-| Event timestamp | `10/20/2026 13:46:23.522` (as shown in the alert details) |
-| Direction | `inbound` |
+| Rule / severity | Inbound Email Containing Suspicious External Link / Medium |
 | Sender | `onboarding@hrconnex.thm` |
 | Recipient | `j.garcia@thetrydaily.thm` |
 | Subject | `Action Required: Finalize Your Onboarding Profile` |
+| URL | `hrconnex.thm/onboarding/1540065406/j.garcia` |
 | Attachment | None |
-| Host shown in Splunk | `10.10.160.225:8989` |
-| Link host | `hrconnex.thm` |
-| Link path | `/onboarding/1540065406/j.garcia` |
 
-The message claimed the recipient needed to complete their onboarding profile and included a link labeled **Set Up My Profile**. The sender and link use a similar-looking domain, which may make the message appear plausible, but visual similarity alone does not establish legitimacy.
+The email asked the recipient to complete an onboarding profile through an external link.
 
-**Screenshot — initial alert queue**
+<img src="https://github.com/user-attachments/assets/ac5a56a3-8f50-467c-b967-cb63ce4db716" width="650" alt="Alert queue showing alert 8814">
 
-![Initial alert queue showing alert 8814](https://github.com/user-attachments/assets/ac5a56a3-8f50-467c-b967-cb63ce4db716)
+### 2. Triage
 
-**Screenshot — expanded alert details and the second queued alert**
-
-![Expanded alert 8814 and alert 8815 in the queue](https://github.com/user-attachments/assets/f8dedca9-cfa2-4221-b682-9e6eb754e9f1)
-
-## 2. Triage
-
-### Step 1: Find the triggering email event
-
-The first step was to search Splunk for events with the sender address shown in the alert.
+I searched Splunk for the sender and recipient to locate the triggering email and review surrounding messages.
 
 ```spl
-index = *
-| search sender = "onboarding@hrconnex.thm"
+index=*
+| search sender="onboarding@hrconnex.thm"
 ```
-
-This returned the email event associated with the alert. The event contained the sender, recipient, subject, message body, timestamp, and link. The available event data showed no attachment.
-
-**Screenshot — Splunk search by sender**
-
-![Splunk results for the sender address](https://github.com/user-attachments/assets/b5137ee1-f5a2-42c3-bbf8-309de78a2f2a)
-
-### Initial observations
-
-- The sender address, `onboarding@hrconnex.thm`, appeared consistent with the onboarding theme of the message.
-- The URL used the host `hrconnex.thm`, which resembles the sender's domain.
-- The message asked the recipient to complete an onboarding profile.
-- No attachment was listed.
-
-These observations explain why the email could look legitimate at first glance. They are **not sufficient on their own to rule out phishing**: display names and sender addresses can be spoofed, and a domain that resembles a legitimate service can still be attacker-controlled.
-
-### Step 2: Review other messages for the recipient
-
-The next search looked for other email events involving the recipient:
 
 ```spl
-index = *
-| search recipient = "j.garcia@thetrydaily.thm"
+index=*
+| search recipient="j.garcia@thetrydaily.thm"
 ```
 
-The supplied Splunk screenshot showed multiple messages to the same recipient. The visible examples included:
+Other messages referenced hiring and workplace activities, which made the onboarding message plausible but did not prove it was legitimate.
 
-- **Employee Feedback Survey** — content asking the recipient to provide feedback.
-- **Hiring Update - Interview Schedule** — content referring to interviews and checking calendars.
-- **Action Required: Finalize Your Onboarding Profile** — the message that triggered alert 8814.
-- **New Product Launch - All Hands on Deck** — an internal-sounding announcement.
-- Other messages were also present in the results.
+<img src="https://github.com/user-attachments/assets/b5137ee1-f5a2-42c3-bbf8-309de78a2f2a" width="650" alt="Splunk results for sender">
+<img src="https://github.com/user-attachments/assets/2d7a551a-04cc-490b-85f3-3d0643d9c334" width="650" alt="Splunk results for recipient">
 
-The surrounding messages gave context that the recipient might be involved in a hiring or onboarding process. However, the screenshot alone does not verify that the sender or linked site was authorized.
+### 3. Evidence Analysis
 
-**Screenshot — Splunk search by recipient**
+- The sender and link used the same `hrconnex.thm` domain.
+- The message had no attachment.
+- Related messages suggested a possible hiring/onboarding context.
+- Domain and URL checks did **not** return usable reputation or registration results. ICANN Lookup reported: **“No registry RDAP server was identified for this domain.”** VirusTotal could not find the URL.
 
-![Splunk events for recipient j.garcia@thetrydaily.thm](https://github.com/user-attachments/assets/2d7a551a-04cc-490b-85f3-3d0643d9c334)
+These lookup results are inconclusive: they do not establish that the domain or URL is safe or malicious. To resolve this I assume that this domain and URL were not public and were created for the sake of the SOC Simulator exercise. With this assumption I categorize this as a legit traffic. 
 
-### Triage assessment
+<img src="https://github.com/user-attachments/assets/2fa3b884-ed84-4500-95d8-4d136321ea01" width="650" alt="ICANN Lookup result">
 
-The recipient's other messages made the onboarding explanation plausible, but the evidence provided did not show URL reputation, domain ownership, email authentication results, or whether the link was accessed. These checks would help distinguish a legitimate onboarding message from a well-crafted phishing email.
+### 4. Correlation
+The sender search matched the alert email; the recipient search showed other workplace-related messages. The available evidence did not show whether the link was visited or whether credentials were submitted.
 
-## 3. Evidence Analysis
+### 5. Threat Intelligence
 
-### Email evidence
+| Source | Result |
+|---|---|
+| ICANN Lookup | No registry RDAP server identified for the domain |
+| VirusTotal | URL not found / no usable result |
 
-| Evidence | Observation | Assessment |
-|---|---|---|
-| Sender | `onboarding@hrconnex.thm` | Plausible for onboarding, but not proof of authenticity. |
-| Recipient | `j.garcia@thetrydaily.thm` | Matches the user investigated in the recipient search. |
-| Subject | `Action Required: Finalize Your Onboarding Profile` | Uses urgency and an account/profile action; common in both legitimate onboarding and phishing. |
-| Message body | Welcomes the recipient and asks them to set up a profile. | Context is plausible, but should be independently verified. |
-| URL host | `hrconnex.thm` | Similar to the sender domain; reputation and ownership were not established in the supplied evidence. |
-| Attachment | None | No attachment was recorded; the link remains the primary concern. |
-| Other messages | Hiring/interview and workplace-related messages were visible for the same recipient. | Provides context, not proof that this email is safe. |
-| Splunk host field | `10.10.160.225:8989` | Internal/lab event metadata shown in Splunk; its exact role was not established. |
+No reputation verdict was available from these checks.
 
-Additionally I checked domain reputation to check for correlation between sender and receiver e-mail, but supposedly because of inner character of SOC Simulation there was no registry for this domain. Additionaly URL shown in the message doesn't raise any suspicions in Virustotal, because it can't find the URL (its possible that the URL was generated for SOC Simulation):
-<img width="1050" height="229" alt="image" src="https://github.com/user-attachments/assets/2fa3b884-ed84-4500-95d8-4d136321ea01" />
+### 6. MITRE ATT&CK
 
-
-## 4. Correlation
-
-### Available timeline
-
-The screenshots show more than one timestamp for the same event. The table below preserves the values as displayed and does not assume that the discrepancy has been resolved.
-
-| Time / date shown | Event | Source |
-|---|---|---|
-| October 20, 2026, `12:46:23.522 PM` | Email event displayed in the expanded Splunk event screenshot. | Splunk screenshot |
-| October 20, 2026, `13:46:23.522` | Timestamp field shown in the alert details. | Alert details |
-| October 20, 2026, around `12:48` | Alert 8814 detection time shown in the case-report screen. | Case report |
-| October 20, 2026, `13:48` | Alert 8814 date/time shown in the alert queue. | Alert queue |
-| During the investigation | Alert 8815 appeared in the queue with the same rule and Medium severity. | Alert queue |
-| After review | Alert 8814 was classified as a false positive in the lab and the alert was closed. | Closure and case-report screenshots |
-
-### Correlation result
-
-The sender search identified the email event matching the alert's sender, and the recipient search returned other messages addressed to the same recipient. No supplied screenshot demonstrates a related URL connection, endpoint execution, credential submission, or other post-delivery activity.
-
-## 5. Threat Intelligence
-
-No threat-intelligence lookups or URL-reputation results.
-
-## 6. MITRE ATT&CK
-
-The alert concerns a potentially suspicious inbound email, but the available evidence does not confirm malicious activity. 
+No technique is confidently mapped because the available evidence does not confirm malicious activity.
 
 ## Findings
 
-The alert was generated because an inbound email contained an external link. Searching by sender located the relevant event, and searching by recipient revealed other messages with hiring- and workplace-related context. Those details made the onboarding message plausible, but the supplied evidence did not independently validate the sender, domain, URL, or any subsequent network activity.
+The lab recorded this alert as a **False Positive**. The onboarding context appeared plausible, but the domain and URL lookups were inconclusive. Similarity between sender and link domains is not proof of legitimacy, so the false-positive decision reflects the lab outcome rather than independent confirmation that the link was safe.
 
-**Verdict:** False Positive *(the lab's recorded decision; not independently confirmed by the supplied evidence)*
+**Verdict:** False Positive 
 
-**Severity:** Medium *(as assigned by the alert rule)*
+**Severity:** Medium *(original alert severity)*
 
-**Affected Assets:**
-- Recipient: `j.garcia@thetrydaily.thm`
-- Email event associated with alert `8814`
-- Splunk metadata host: `10.10.160.225:8989` (role not established)
+**Affected Assets:** `j.garcia@thetrydaily.thm`; email alert `8814`
 
-### Closure rationale recorded in the lab
-
-The submitted case report classified the alert as a false positive because the link appeared to match the sender's domain, the message seemed consistent with onboarding, and other messages suggested the recipient could be in a hiring/onboarding process.
-
-This reflects the analyst's lab decision. Because sender/domain similarity and contextual messages do not prove authenticity, a production investigation should validate the URL and email authentication before closing the alert as benign.
-
-**Screenshot — alert closure decision**
-
-![Alert 8814 closure dialog with False positive selected](https://github.com/user-attachments/assets/2b1b62d1-2d7f-4bfd-9762-7184cc633d0c)
-
-**Screenshot — submitted case report**
-
-![Case report for alert 8814](https://github.com/user-attachments/assets/d77fc6b0-95ce-4faa-9564-6ed017eb7f50)
+<img src="https://github.com/user-attachments/assets/2b1b62d1-2d7f-4bfd-9762-7184cc633d0c" width="650" alt="False-positive closure decision">
+<img src="https://github.com/user-attachments/assets/d77fc6b0-95ce-4faa-9564-6ed017eb7f50" width="650" alt="Submitted case report">
 
 ## Response & Recommendations
 
-### Actions completed in the lab
-
-- Assigned alert `8814`.
-- Searched Splunk for the sender and recipient.
-- Reviewed the email details and related recipient messages.
-- Selected **False Positive** in the alert closure workflow.
-- Submitted the case report and closed the alert.
-
-### Recommended follow-up in a real SOC
--
-
-### Splunk queries used
-
-**Find email events from the sender:**
-
-```spl
-index = *
-| search sender = "onboarding@hrconnex.thm"
-```
-
-**Find email events addressed to the recipient:**
-
-```spl
-index = *
-| search recipient = "j.garcia@thetrydaily.thm"
-```
+- Reviewed the alert and searched Splunk by sender and recipient.
+- Checked the domain in ICANN Lookup and the URL in VirusTotal; neither returned a usable result.
+- Recorded the lab’s false-positive decision. In a real SOC, verify email authentication and proxy/DNS activity before closing a similar alert.
