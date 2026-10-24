@@ -1,7 +1,7 @@
-# Security Investigation — Suspicious Parent-Child Relationship
+# Security Investigation - Suspicious Parent-Child Relationship
 
 ## Source
-TryHackMe — SOC Simulator
+TryHackMe - SOC Simulator
 
 ## Scenario
 Low-severity alert `1001` detected an unusual process parent-child relationship on host `win-3459`. The investigation checked the process event in Splunk and searched for child processes associated with the alerted process.
