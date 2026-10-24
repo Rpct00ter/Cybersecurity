@@ -105,8 +105,8 @@ These mappings describe the observed social-engineering behavior; the packet cap
 
 The PCAP contains a VoIP call consistent with a vishing attack. SIP analysis identified James's number (`7001`), the caller number (`01326947697`), the call start time (`2024-05-03 20:36:36`) and duration (`00:01:35`). Listening to the RTP audio identified the claimed bank as **Bank of Wealth** and confirmed that James disclosed the value **5678** as his Social Number.
 
-**Verdict:** True Positive — vishing / voice-based social engineering
-**Severity:** High — sensitive personal information was disclosed during the call
+**Verdict:** True Positive - vishing / voice-based social engineering
+**Severity:** High - sensitive personal information was disclosed during the call
 **Affected Assets:** James (`7001`); VoIP call represented in `Traffic.pcapng`; exposed Social Number value `5678`
 
 ## Response & Recommendations
