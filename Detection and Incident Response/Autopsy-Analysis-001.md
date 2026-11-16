@@ -16,6 +16,8 @@ Files are being analyzded, The first thing that I checked because it fully loade
 (better screenshot can be made, because not fully analyzed data is presented)
 
 What is the MD5 hash of the E01 image?
+MD5 hash is one of the file metadata. It can be verified by selecting a file and then opening a "file metadata" tab as shown in the screenshot below:
+<img width="1400" height="553" alt="image" src="https://github.com/user-attachments/assets/e7c80294-e665-4473-b57b-8b8cdf8932c3" />
 
 What is the computer account name?
 
