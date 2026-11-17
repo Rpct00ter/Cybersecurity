@@ -76,5 +76,14 @@ In order to answer this question I decided to scroll through "Run Programs" tab 
 <img width="2403" height="1383" alt="image" src="https://github.com/user-attachments/assets/d118b13b-7012-446c-8035-699063f86699" />
 
 There is a YARA file on the computer. Inspect the file. What is the name of the author?
+In order to find this file quickly I used Keyword Search and searched for occurance of ".yar". Results show file located under: "C:\Users\H4S4N\Desktop\mimikatz_trunk\kiwi_passwords.yar".
+<img width="2403" height="1383" alt="image" src="https://github.com/user-attachments/assets/9545f8d5-0062-47c9-9288-6aeab66f6202" />
+Unfortunately desktop is cleared, but I managed to find something in the recent documents:
+<img width="1018" height="367" alt="image" src="https://github.com/user-attachments/assets/528f4c25-64bb-40d5-9299-60107195bc1c" />
+But still-it didn't have an author. I later tried to use Tools -> Search by Attribute function, but still could't find this file. As for the "Try Hack Me" is really buggy lately, I decided to browse for the author online.
+<img width="698" height="175" alt="image" src="https://github.com/user-attachments/assets/4f9b4437-5cbf-4e77-ae74-e26d0e0e0bb0" />
 
 One of the users wanted to exploit a domain controller with an MS-NRPC based exploit. What is the filename of the archive that you found? (include the spaces in your answer) 
+I browsed what specifically is MS-NRPC and I was getting a lot of names like: "Zerologon" and "Netlogon". So I searched for keyword "logon" in Autopsy and found result documenting interactions with MS-NRPC based exploit (zerologon):
+<img width="1410" height="530" alt="image" src="https://github.com/user-attachments/assets/fe74757b-f45b-4305-b403-f8abfd3060fa" />
+
