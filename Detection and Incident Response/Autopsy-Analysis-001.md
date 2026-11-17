@@ -20,23 +20,44 @@ MD5 hash is one of the file metadata. It can be verified by selecting a file and
 <img width="1400" height="553" alt="image" src="https://github.com/user-attachments/assets/e7c80294-e665-4473-b57b-8b8cdf8932c3" />
 
 What is the computer account name?
+Computer account name can be checked under Extracted Content -> Operating System Information:
+<img width="1110" height="713" alt="image" src="https://github.com/user-attachments/assets/d83d4887-ab48-4b9a-b040-293d88498c79" />
 
-List all the user accounts. (alphabetical order)
+List all the user accounts. (alphabetical order):
+All OS User Accounts can be accessed under the tab with the same name. I checked only accounts that have path in the image.
+<img width="1916" height="811" alt="image" src="https://github.com/user-attachments/assets/7bc12827-d14b-4283-b570-177938c00ce9" />
+
 H4S4N,joshwa,keshav,sandhya,shreya,sivapriya,srini,suba
 
 Who was the last user to log into the computer?
+In the same tab as before, I sorted users by Date Accessed and read the most recent result:
+<img width="569" height="122" alt="image" src="https://github.com/user-attachments/assets/8d5fc4bb-7fd3-43b1-a106-9ac86567dc49" />
 
 What was the IP address of the computer?
-
 What was the MAC address of the computer? (XX-XX-XX-XX-XX-XX)
 
+In order to read that information I need to dig into filesystem more. Image has 3 volumes, but vol3 is the main volume was used for daily usage and data storage (it is the bigeest and contains many directories (including users directories). I went into vol3 -> Windows -> System32 -> config. Unfortunately I was unable to find any helpful data. So I started digging more. Under Program Files (x86) there was a whole directory named Look@LAN (which is an answer to the further question). After quick research it looks like this is some kind of vintage app for remote connections. After checking .ini file we can see IP and MAC.
+<img width="773" height="812" alt="image" src="https://github.com/user-attachments/assets/e4ca4f44-ff4b-4e5e-bdcb-ca1fdbee906b" />
+
+
 What is the name of the network card on this computer?
+I once again dig into: I went into vol3 -> Windows -> System32 -> config. This time I opened SOFTWARE registry file and in Application tree selected Microsoft->Windows NT->Current Version->Network Card.
+<img width="840" height="386" alt="image" src="https://github.com/user-attachments/assets/67901433-e94c-4bd2-a027-e6cf5a910fce" />
 
 What is the name of the network monitoring tool?
 
 A user bookmarked a Google Maps location. What are the coordinates of the location?
+This one was easye, I just entered Web Bookmarks tab in autopsy, sorted them by URL, searched for google.maps and found the localisation:
+<img width="1433" height="739" alt="image" src="https://github.com/user-attachments/assets/e6742f80-e3a7-4e9c-ad00-9cd9e15099ac" />
 
 A user has his full name printed on his desktop wallpaper. What is the user's full name?
+User's wallpaper should be stored in the user's NTUSER.DAT registry file - so that's where I went.
+Specifically, in Control Panel\Desktop\WallPaper.
+<img width="1837" height="1427" alt="image" src="https://github.com/user-attachments/assets/65be2b38-b650-4fc8-8a3a-b8d4fa8a4aed" />
+There are 8 users, thats means I'm going to check 8 wallpaper localisations and then check them one by one, for user's name.
+Fortunately after checking H454N, the second user was the one I was searching for:
+<img width="1132" height="767" alt="image" src="https://github.com/user-attachments/assets/45f199f9-1768-4a54-8d19-16daccd15a2b" />
+
 
 A user had a file on her desktop. It had a flag but she changed the flag using PowerShell. What was the first flag?
 
