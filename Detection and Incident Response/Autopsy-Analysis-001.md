@@ -60,10 +60,20 @@ Fortunately after checking H454N, the second user was the one I was searching fo
 
 
 A user had a file on her desktop. It had a flag but she changed the flag using PowerShell. What was the first flag?
-
 The same user found an exploit to escalate privileges on the computer. What was the message to the device owner?
 
+My first step in order to answer this question was to search for powershell scripts. I used KeywordSearch for ".ps" and gained some results showing recent usage of powershell scripts by user: "shreya" Moreover those scripts are named very suspicious (exploit.ps1). All the suspicious exploits should be on users desktop.
+<img width="637" height="686" alt="image" src="https://github.com/user-attachments/assets/bab74194-0b86-454c-b528-0bbce1587574" />
+After investigating the script it looks like it attempts to bypass Windows UAC to gain elevated privileges by modifying a registry value and launching the SilentCleanup scheduled task, then creates a hacked.txt file containing with a message "flag{I-hacked-you}" if administrator privileges are obtained.
+<img width="1098" height="811" alt="image" src="https://github.com/user-attachments/assets/f62e7390-821d-448c-8a3f-f23ddd9eaf52" />
+I also found a .txt file with a changed flag:
+<img width="636" height="367" alt="image" src="https://github.com/user-attachments/assets/e2567c73-2e1e-44af-9a87-9a11526d4082" />
+In order to see the previous state of a file I digged into powershell history of the user located under: vol3/Users/shreya/AppData/Roaming/Microsoft/Windows/PowerShell/PSReadLine.
+<img width="981" height="832" alt="image" src="https://github.com/user-attachments/assets/8f45db8b-c8cf-4d93-89b0-27c6850d3fd3" />
+
 2 hack tools focused on passwords were found in the system. What are the names of these tools? (alphabetical order)
+In order to answer this question I decided to scroll through "Run Programs" tab in Autopsy and I was quick searching for suspicious program in \users\ localization. I was lucky and one under another I found 2 hacktools.
+<img width="2403" height="1383" alt="image" src="https://github.com/user-attachments/assets/d118b13b-7012-446c-8035-699063f86699" />
 
 There is a YARA file on the computer. Inspect the file. What is the name of the author?
 
