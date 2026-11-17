@@ -87,3 +87,5 @@ One of the users wanted to exploit a domain controller with an MS-NRPC based exp
 I browsed what specifically is MS-NRPC and I was getting a lot of names like: "Zerologon" and "Netlogon". So I searched for keyword "logon" in Autopsy and found result documenting interactions with MS-NRPC based exploit (zerologon):
 <img width="1410" height="530" alt="image" src="https://github.com/user-attachments/assets/fe74757b-f45b-4305-b403-f8abfd3060fa" />
 
+So the quick summary shows that:
+(summary of what happened on the device)
