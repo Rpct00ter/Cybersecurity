@@ -40,7 +40,7 @@ index = *
 | search host.name="win-3450"
 
 (during investigation my SOC environment crashed and I had to launch room again - it caused timestamps difference. I will include this diffrence in the final table: event started at 11/21/2026 20:00:03.185)
-It shows 95 ALERTS!
+It shows 95 ALERTS! I'm not going to describe each one of them, but I will describe each chunk of alerts that point toward specific technique or action taken by the attacker.
 <img width="915" height="267" alt="image" src="https://github.com/user-attachments/assets/b98d6586-68d5-4aa0-a7f1-cc45c8bb9cb2" />
 
 I scrolled thru them. There are many non-malicious alerts like bening activities or printer updates:
@@ -66,7 +66,7 @@ Then at timestamp: 11/21/2026 20:22:00.666 commands that aim towards dicovering 
 At timestamp: 11/21/2026 20:23:08.666 attacker executed scripts that evade execution policy restrictions for that session:
 <img width="1003" height="270" alt="image" src="https://github.com/user-attachments/assets/2667580f-9f1f-4f43-9a4b-8009046e5e5d" />
 
-After that, attacker started executing another powershell commands that indicate Active Directory reconnaissance:
+After that, attacker started executing another powershell commands that indicate i think (but Im not sure) Active Directory reconnaissance:
 <img width="1548" height="270" alt="image" src="https://github.com/user-attachments/assets/ea3ba8f0-c190-4872-9c9e-16d8c249374c" />
 <img width="1668" height="374" alt="image" src="https://github.com/user-attachments/assets/9a5cfc94-8246-45b2-a5bd-95205ea7a0eb" />
 
