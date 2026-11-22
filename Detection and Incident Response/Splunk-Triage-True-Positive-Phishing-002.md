@@ -1,86 +1,240 @@
-Source: TryHackMe SOC Simulator
-I assigned myself an alert 1005 - suspicious attachmenet in the email.
-<img width="1502" height="453" alt="image" src="https://github.com/user-attachments/assets/ce49c92d-b4f7-4749-b9eb-b99af0f789fd" />
+# Security Investigation - Suspicious Email Attachment Leading to PowerShell Intrusion
 
-So first I had to find this alert.
-I searched for it by a sender, and checked if he by the way didn't sent something to someone else.
+## Source
+TryHackMe SOC Simulator – Alert 1005: **Suspicious Attachment Found in Email**
 
-index = *
+## Scenario
+An inbound email containing a suspicious ZIP attachment was flagged for investigation. The message used urgent payment-related language and threatened account suspension and legal action. The investigation expanded to host telemetry, revealing suspicious PowerShell activity, remote access, reconnaissance, data collection, and DNS-based exfiltration indicators.
+
+## Tasks
+- Investigate the sender, email content, and attachment context.
+- Correlate email-related events with endpoint activity in Splunk.
+- Identify attacker actions, assess impact, and document escalation recommendations.
+
+## Tools & Technologies
+- Splunk Enterprise
+- TryHackMe SOC Simulator
+- Cisco Talos
+- Windows endpoint telemetry / PowerShell event analysis
+
+---
+
+# Investigation
+
+### 1. Initial Alert / Detection
+
+I assigned myself alert **1005 – Suspicious Attachment found in email**, categorized as a low-severity phishing alert.
+
+| Field | Value |
+|---|---|
+| Sender | `john@hatmakereurope.xyz` |
+| Recipient | `michael.ascot@tryhatme.com` |
+| Subject | `FINAL NOTICE: Overdue Payment - Account Suspension Imminent` |
+| Attachment | `ImportantInvoice-February.zip` |
+| Direction | Inbound |
+| Alert timestamp | `2026-10-21 10:48:34.908` (alert display) |
+
+![Alert details](https://github.com/user-attachments/assets/ce49c92d-b4f7-4749-b9eb-b99af0f789fd)
+
+### 2. Triage
+
+#### Sender activity
+
+I searched Splunk for messages from the sender to determine whether the address had sent additional messages:
+
+```spl
+index=*
 | search sender="john@hatmakereurope.xyz"
+```
 
-<img width="1917" height="792" alt="image" src="https://github.com/user-attachments/assets/c6d73cad-57b3-4c10-974a-c358b81a31d6" />
-It occures that it was the only message sent by this sender.
-I checked the email online to determine if it has malicious history.
-I checked domain in talos but there was 0 results.
-<img width="1560" height="880" alt="image" src="https://github.com/user-attachments/assets/7ab5d4f1-5d94-42d5-b0b3-310eacc1b76e" />
+![Sender search](https://github.com/user-attachments/assets/c6d73cad-57b3-4c10-974a-c358b81a31d6)
 
-Then I proceeded to check the email content and the suspicious attachement.
-<img width="1612" height="847" alt="image" src="https://github.com/user-attachments/assets/34479cc0-59ca-4b08-91dd-b5ade23f2131" />
-First thing that I noticed is that email gives off vibes of urgency. There are strong words like: "immediate payment", "Legal action", "FINAL NOTICE", "URGENT", "Open the attached invoice immediately". That is suspicious because attackers often use sense of urgency as a social engineering tactic. 
+The search returned one matching message in the available data. This provided no additional sender activity to correlate, but does not establish that the sender is benign.
 
-I don't have an access to the file so I can not check it for maliciousness. If I could I would check it's hash, check it in Virustotal and run it in the isolated sandbox environment.
-Considering the fact I can't explore the attachement I am definately escalating this to the L2 Analyst.
+#### Domain reputation
 
-The last thing I want to do before sending a report is to check for any suspicious activity on the host or sudden occurance of the attached file in the logs. First thing I'm checking is the attachement and it corelates to 6 other alerts:
+I checked `hatmakereurope.xyz` using Cisco Talos. The lookup returned no established reputation or categorization information.
 
-index = *  
-| search "ImportantInvoice-Febrary.zip"
+![Talos domain lookup](https://github.com/user-attachments/assets/7ab5d4f1-5d94-42d5-b0b3-310eacc1b76e)
 
-<img width="355" height="63" alt="image" src="https://github.com/user-attachments/assets/7e0f5343-9a9b-4282-ad71-d300a1e70cbf" />
+A reputation result of unknown should not be treated as proof that a domain is safe.
 
-First Alert is the one that initialized this investigation and it occured at  10/21/2026 09:49:48.090
+#### Email content and attachment
 
-Next 3 alerts were generated simultanousely at the same time at  10/21/2026 10:09:55.090
-<img width="952" height="572" alt="image" src="https://github.com/user-attachments/assets/91a4131c-df65-4d77-992f-ab83c32a5e87" />
+The message used pressure tactics, including **“FINAL NOTICE,” “URGENT,” “immediate payment,”** and threats of legal action. It urged the recipient to open the attached invoice immediately. These are common social-engineering indicators.
 
-All have pid 8668 and the process is named as OUTLOOK.EXE. The alert was generated by a file creation. The localization looks like the cache localization. The file was definately downloaded and it looks like it was saved in some outlook related folder.
-So after this I stopped checking alerts related to the file and widened the area of investigation setting events to occure from 10/21/2026 09:49:48.090:
+![Email details](https://github.com/user-attachments/assets/34479cc0-59ca-4b08-91dd-b5ade23f2131)
 
-index = *   
+The attachment was not available for direct analysis in the simulator. I therefore could not calculate its hash, scan it with VirusTotal, or detonate it in a sandbox. Given the suspicious email content and subsequent endpoint evidence, I escalated the incident rather than treating the attachment as safe.
+
+### 3. Evidence Analysis
+
+#### Attachment-related events
+
+I searched for the attachment filename across the available Splunk indexes:
+
+```spl
+index=*
+| search "ImportantInvoice-February.zip"
+```
+
+![Attachment search](https://github.com/user-attachments/assets/7e0f5343-9a9b-4282-ad71-d300a1e70cbf)
+
+The search returned six events associated with the filename. Three file-creation events occurred at approximately `2026-10-21 10:09:55.090`, associated with `OUTLOOK.EXE`, PID `8668`, and a path within Outlook's local cache.
+
+![Outlook file creation events](https://github.com/user-attachments/assets/91a4131c-df65-4d77-992f-ab83c32a5e87)
+
+The events indicate that the attachment was written to a local Outlook-related cache location. File creation alone does not prove execution; the later endpoint activity provided stronger evidence of compromise.
+
+#### Expanded host investigation
+
+I broadened the search to host `win-3450`:
+
+```spl
+index=*
 | search host.name="win-3450"
+```
 
-(during investigation my SOC environment crashed and I had to launch room again - it caused timestamps difference. I will include this diffrence in the final table: event started at 11/21/2026 20:00:03.185)
-It shows 95 ALERTS! I'm not going to describe each one of them, but I will describe each chunk of alerts that point toward specific technique or action taken by the attacker.
-<img width="915" height="267" alt="image" src="https://github.com/user-attachments/assets/b98d6586-68d5-4aa0-a7f1-cc45c8bb9cb2" />
+![Host events](https://github.com/user-attachments/assets/b98d6586-68d5-4aa0-a7f1-cc45c8bb9cb2)
 
-I scrolled thru them. There are many non-malicious alerts like bening activities or printer updates:
-<img width="638" height="277" alt="image" src="https://github.com/user-attachments/assets/9c256332-4dbd-4483-9320-04caa2cc7539" />
-<img width="1602" height="257" alt="image" src="https://github.com/user-attachments/assets/45143903-a82e-4743-9819-78a5e0710480" />
+The search returned 95 events in the available dataset. I filtered through the events, distinguishing routine activity (including printer-related activity) from events relevant to the suspicious sequence.
 
-I know for certain that there was interaction with the potentially malicious file, so I scroll untill I find the follow up events. As I said, so I did. After suspicious files created in outlook related folder there was a dns connection to retrieve something from git repository at 11/21/26 8:21:35.666 PM. 
-<img width="671" height="276" alt="image" src="https://github.com/user-attachments/assets/7c75cc89-2e50-43e6-ba02-eef85fbe75c4" />
+![Routine events example](https://github.com/user-attachments/assets/9c256332-4dbd-4483-9320-04caa2cc7539)
 
-At timestamp: 11/21/2026 20:21:43.666 Explorer.exe created a file-stream hash event for an invoice.pdf.lnk with process.pid: 3180 :
-<img width="969" height="220" alt="image" src="https://github.com/user-attachments/assets/06099c8c-a67b-4c53-b693-c55e26a1758a" />
+![Routine events example 2](https://github.com/user-attachments/assets/45143903-a82e-4743-9819-78a5e0710480)
 
-At timestamp: 11/21/2026 20:21:44.666  PowerShell downloaded and executed powercat.ps1 from GitHub, then launched Powercat to connect to remote endpoint and achieved a reverse shell.
-<img width="1675" height="293" alt="image" src="https://github.com/user-attachments/assets/874aeb3f-81ba-4411-b85e-7152dbb5a70f" />
+> **Timeline caveat:** The SOC simulator session was restarted during the investigation. The later endpoint events were captured in the restarted session and show timestamps on `2026-11-21`. These are documented as a separate observed sequence, rather than being presented as a continuous clock sequence with the original email timestamps.
 
+#### Suspicious download and command execution
 
-Then it started to execute pipelines via powershell:
-<img width="1675" height="355" alt="image" src="https://github.com/user-attachments/assets/d60e4b43-f93f-4636-923d-608252da032a" />
+Endpoint events showed a DNS query for `raw.githubusercontent.com` from `powershell.exe`, followed by activity consistent with downloading and running PowerCat from GitHub.
 
-Then at timestamp: 11/21/2026 20:22:00.666 commands that aim towards dicovering the target (like whoami) were executed. At this stage attacker achieved remote connection and is able to execute commands on victims system:
-<img width="1675" height="556" alt="image" src="https://github.com/user-attachments/assets/44e48e46-c240-418a-8fc2-65a51967a627" />
+![DNS query](https://github.com/user-attachments/assets/7c75cc89-2e50-43e6-ba02-eef85fbe75c4)
 
-At timestamp: 11/21/2026 20:23:08.666 attacker executed scripts that evade execution policy restrictions for that session:
-<img width="1003" height="270" alt="image" src="https://github.com/user-attachments/assets/2667580f-9f1f-4f43-9a4b-8009046e5e5d" />
+A file-stream/hash event was recorded for an `invoice.pdf.lnk` file in a temporary location:
 
-After that, attacker started executing another powershell commands that indicate i think (but Im not sure) Active Directory reconnaissance:
-<img width="1548" height="270" alt="image" src="https://github.com/user-attachments/assets/ea3ba8f0-c190-4872-9c9e-16d8c249374c" />
-<img width="1668" height="374" alt="image" src="https://github.com/user-attachments/assets/9a5cfc94-8246-45b2-a5bd-95205ea7a0eb" />
+![LNK file event](https://github.com/user-attachments/assets/06099c8c-a67b-4c53-b693-c55e26a1758a)
 
-Attacker created folder for exfiltration and started collecting data. He stole system data, ClientPortfolioSummary.xlsx, InvestorPresentation2023.pptx, :
-<img width="567" height="214" alt="image" src="https://github.com/user-attachments/assets/321fe8b3-3de6-441b-9bfb-768f8f91e72c" />
-<img width="695" height="441" alt="image" src="https://github.com/user-attachments/assets/1a97d2df-ff20-40f2-af41-89d05fbfd39e" />
-<img width="1668" height="347" alt="image" src="https://github.com/user-attachments/assets/c04acd0a-5293-4822-a6ab-63aa64187e0c" />
+The process telemetry showed PowerShell using `System.Net.WebClient` to retrieve `powercat.ps1` from GitHub, followed by a PowerCat command connecting to `2.tcp.ngrok.io` on port `19282` and using PowerShell as the command shell. This is consistent with reverse-shell behavior.
 
-Then at    timestamp: 11/21/2026 20:26:36.666  attacker started to enumerate Active Directory computers and test their connectivity and after succesfull enumeration he 
-<img width="1673" height="686" alt="image" src="https://github.com/user-attachments/assets/03521e9d-f80f-4ab1-9286-beaede539f76" />
-<img width="1673" height="732" alt="image" src="https://github.com/user-attachments/assets/4f5e9347-5baf-45a0-96a2-2b6029860bc3" />
+![PowerCat execution](https://github.com/user-attachments/assets/874aeb3f-81ba-4411-b85e-7152dbb5a70f)
 
-The attacker is reading BitCoinWalletPasscodes.txt, Base64-encoding and splitting its contents, then sending the chunks through DNS queries to haz4rdw4re.io.
-<img width="1686" height="770" alt="image" src="https://github.com/user-attachments/assets/4dcbc930-f32e-4d04-b2e4-7d1fa0751fa1" />
+PowerShell pipeline execution telemetry further recorded activity associated with the command:
 
-At     timestamp: 11/21/2026 20:27:00.666  was his last executed powershell script. 
-He gained a lot of info, after quick checking other hosts there are no indicators that the other machines were affected, but attacker definately gained info about the work environment. Additionally many devastatingly important data were stolen. Its full scale compromise.
+![PowerShell pipeline](https://github.com/user-attachments/assets/d60e4b43-f93f-4636-923d-608252da032a)
+
+#### Host discovery and execution-policy bypass
+
+At approximately `2026-11-21 20:22:00.666`, process telemetry recorded discovery commands such as `net.exe user` and `whoami.exe /priv`, launched by PowerShell. This is consistent with initial host and privilege-context discovery after remote command execution.
+
+![Discovery commands](https://github.com/user-attachments/assets/44e48e46-c240-418a-8fc2-65a51967a627)
+
+At approximately `20:23:08.666`, PowerShell telemetry recorded an execution-policy bypass command.
+
+![Execution policy bypass](https://github.com/user-attachments/assets/2667580f-9f1f-4f43-9a4b-8009046e5e5d)
+
+#### Active Directory reconnaissance
+
+Additional PowerShell activity and script-block telemetry appeared consistent with Active Directory / domain reconnaissance. The activity included PowerView-related tooling and commands to enumerate domain and computer information.
+
+![AD reconnaissance](https://github.com/user-attachments/assets/ea3ba8f0-c190-4872-9c9e-16d8c249374c)
+
+![AD reconnaissance continued](https://github.com/user-attachments/assets/9a5cfc94-8246-45b2-a5bd-95205ea7a0eb)
+
+#### Data collection
+
+The attacker created an `exfiltration` directory under the user's Downloads path. Telemetry subsequently showed files appearing in that directory, including:
+- `InvestorPresentation2023.pptx`
+- `ClientPortfolioSummary.xlsx`
+
+![Exfiltration directory](https://github.com/user-attachments/assets/321fe8b3-3de6-441b-9bfb-768f8f91e72c)
+
+![Collected files](https://github.com/user-attachments/assets/1a97d2df-ff20-40f2-af41-89d05fbfd39e)
+
+![File activity](https://github.com/user-attachments/assets/c04acd0a-5293-4822-a6ab-63aa64187e0c)
+
+#### Further domain enumeration and DNS-based exfiltration
+
+At approximately `2026-11-21 20:26:36.666`, PowerShell activity was consistent with enumerating domain computers and checking their connectivity.
+
+![Domain computer enumeration](https://github.com/user-attachments/assets/03521e9d-f80f-4ab1-9286-beaede539f76)
+
+![Enumeration results](https://github.com/user-attachments/assets/4f5e9347-5baf-45a0-96a2-2b6029860bc3)
+
+Later PowerShell telemetry showed the contents of `BitcoinWalletPasscodes.txt` being read, Base64-encoded, split into chunks, and sent through DNS queries to `haz4rdw4re.io`. This is consistent with DNS-based data exfiltration.
+
+![DNS exfiltration command](https://github.com/user-attachments/assets/4dcbc930-f32e-4d04-b2e4-7d1fa0751fa1)
+
+The last observed PowerShell script activity in this sequence was around `2026-11-21 20:27:00.666`.
+
+### 4. Correlation
+
+Because the simulator session was restarted, the original email/attachment timestamps and the later endpoint sequence are presented separately, rather than as one uninterrupted timeline.
+
+| Observed time | Event | Interpretation |
+|---|---|---|
+| `2026-10-21` – alert time | Inbound email with `ImportantInvoice-February.zip` | Suspicious phishing email detected |
+| `2026-10-21` – attachment-related events | `OUTLOOK.EXE` file-creation events in Outlook cache | Attachment appears to have been written to local cache |
+| `2026-11-21 20:21:35.666` (approx.) | DNS query for `raw.githubusercontent.com` | Possible retrieval of remote tooling |
+| `2026-11-21 20:21:43.666` | File-stream/hash event for `invoice.pdf.lnk` | Suspicious shortcut-related artifact |
+| `2026-11-21 20:21:44.666` (approx.) | PowerShell downloads PowerCat and connects to ngrok endpoint | Reverse-shell behavior |
+| `2026-11-21 20:22:00.666` | `net.exe user`, `whoami.exe /priv` | Host/user/privilege discovery |
+| `2026-11-21 20:23:08.666` | PowerShell execution-policy bypass | Bypass of execution restrictions |
+| Later in sequence | PowerView-related / domain enumeration activity | Domain reconnaissance |
+| Later in sequence | `exfiltration` directory and files created | Data collection staging |
+| `2026-11-21 20:26:36.666` (approx.) | Domain computer enumeration / connectivity checks | Network and domain discovery |
+| Later in sequence | Base64 encoding and DNS queries to `haz4rdw4re.io` | Likely DNS-based exfiltration |
+
+### 5. Threat Intelligence
+
+| Indicator | Context | Assessment |
+|---|---|---|
+| `hatmakereurope.xyz` | Email sender domain; checked in Cisco Talos | No established reputation result; not proof of benignness |
+| `raw.githubusercontent.com` | PowerShell retrieval of PowerCat | Legitimate hosting service used to retrieve tooling; context is suspicious |
+| `2.tcp.ngrok.io:19282` | PowerCat connection command | Tunnel endpoint used in reverse-shell command |
+| `haz4rdw4re.io` | DNS queries carrying encoded/split content | Strongly suspicious in the observed context |
+
+The context and behavior of these indicators are more meaningful than the reputation of any single domain. The available evidence did not establish the sender-domain reputation as malicious, but endpoint behavior strongly supports a compromise.
+
+### 6. MITRE ATT&CK
+
+| Technique | ID | Evidence |
+|---|---|---|
+| Phishing: Spearphishing Attachment | T1566.001 | Suspicious inbound email with ZIP attachment and urgency-based social engineering |
+| Command and Scripting Interpreter: PowerShell | T1059.001 | PowerShell used to download and execute PowerCat, run commands, and perform reconnaissance |
+| Ingress Tool Transfer | T1105 | PowerShell downloaded PowerCat from GitHub |
+| Remote Access Tool | T1219 (provisional) | PowerCat used to establish a reverse shell via an ngrok endpoint |
+| System Information Discovery | T1082 | Discovery commands executed after remote shell access |
+| Account Discovery | T1087 (provisional) | `net.exe user` activity |
+| Domain Discovery | T1482 (provisional) | PowerShell/PowerView-related domain reconnaissance |
+| File and Directory Discovery | T1083 (provisional) | Activity involving file discovery/collection and file paths |
+| Data Staged | T1074.001 | Files gathered in a directory named `exfiltration` |
+| Exfiltration Over Alternative Protocol | T1048 (provisional) | Encoded data transmitted through DNS queries |
+| Obfuscated Files or Information | T1027 | Base64 encoding and splitting of file contents before transmission |
+
+Technique mappings are behavior-based and indicative; several are provisional and should be refined against the exact commands and event fields.
+
+## Findings
+
+The investigation identified a phishing email containing a suspicious ZIP attachment, followed by endpoint activity consistent with successful compromise of `win-3450`.
+
+Evidence included PowerShell retrieving and running PowerCat, reverse-shell behavior, host and domain reconnaissance, data staging, and apparent DNS-based exfiltration. Files observed in the staging directory included `InvestorPresentation2023.pptx` and `ClientPortfolioSummary.xlsx`. Telemetry also indicated access to `BitcoinWalletPasscodes.txt` and transmission of encoded content through DNS queries to `haz4rdw4re.io`.
+
+**Verdict:** True Positive – compromise supported by endpoint evidence
+
+**Severity:** Critical
+
+**Affected Assets:** `win-3450` / user context `michael.ascot`
+
+**Scope:** Evidence indicates significant compromise of the investigated endpoint and potential data exfiltration. No indicators of compromise were identified on other hosts during the limited checks performed; this does not conclusively rule out wider compromise.
+
+## Response & Recommendations
+
+- Immediately isolate `win-3450` from the network while preserving evidence.
+- Escalate to Incident Response / L2-L3 for containment, forensic acquisition, and scope determination.
+- Reset the affected user's credentials and revoke active sessions/tokens; investigate possible credential exposure.
+- Block or monitor `haz4rdw4re.io` and the ngrok endpoint as appropriate, and review DNS logs for related queries.
+- Investigate the downloaded PowerCat script, shortcut (`.lnk`) artifact, PowerShell history/script-block logs, and related process tree.
+- Identify and preserve staged files and determine whether additional sensitive data was accessed or exfiltrated.
+- Hunt across other endpoints and accounts for PowerShell download-and-execute patterns, PowerCat, ngrok, PowerView, suspicious DNS payloads, and the same filenames/commands.
+- Review and strengthen controls for email attachments, PowerShell logging, DNS monitoring, and endpoint protection.
