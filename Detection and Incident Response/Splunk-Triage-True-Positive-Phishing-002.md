@@ -81,3 +81,6 @@ Then at    timestamp: 11/21/2026 20:26:36.666  attacker started to enumerate Act
 
 The attacker is reading BitCoinWalletPasscodes.txt, Base64-encoding and splitting its contents, then sending the chunks through DNS queries to haz4rdw4re.io.
 <img width="1686" height="770" alt="image" src="https://github.com/user-attachments/assets/4dcbc930-f32e-4d04-b2e4-7d1fa0751fa1" />
+
+At     timestamp: 11/21/2026 20:27:00.666  was his last executed powershell script. 
+He gained a lot of info, after quick checking other hosts there are no indicators that the other machines were affected, but attacker definately gained info about the work environment. Additionally many devastatingly important data were stolen. Its full scale compromise.
