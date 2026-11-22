@@ -47,10 +47,37 @@ I scrolled thru them. There are many non-malicious alerts like bening activities
 <img width="638" height="277" alt="image" src="https://github.com/user-attachments/assets/9c256332-4dbd-4483-9320-04caa2cc7539" />
 <img width="1602" height="257" alt="image" src="https://github.com/user-attachments/assets/45143903-a82e-4743-9819-78a5e0710480" />
 
-I know for certain that there was interaction with the potentially malicious file, so I scroll untill I find the follow up events. As I said, so I did. After suspicious files created in outlook related folder there was a dns connection to retrieve something from git repository. 
+I know for certain that there was interaction with the potentially malicious file, so I scroll untill I find the follow up events. As I said, so I did. After suspicious files created in outlook related folder there was a dns connection to retrieve something from git repository at 11/21/26 8:21:35.666 PM. 
 <img width="671" height="276" alt="image" src="https://github.com/user-attachments/assets/7c75cc89-2e50-43e6-ba02-eef85fbe75c4" />
 
+At timestamp: 11/21/2026 20:21:43.666 Explorer.exe created a file-stream hash event for an invoice.pdf.lnk with process.pid: 3180 :
+<img width="969" height="220" alt="image" src="https://github.com/user-attachments/assets/06099c8c-a67b-4c53-b693-c55e26a1758a" />
+
+At timestamp: 11/21/2026 20:21:44.666  PowerShell downloaded and executed powercat.ps1 from GitHub, then launched Powercat to connect to remote endpoint and achieved a reverse shell.
+<img width="1675" height="293" alt="image" src="https://github.com/user-attachments/assets/874aeb3f-81ba-4411-b85e-7152dbb5a70f" />
 
 
+Then it started to execute pipelines via powershell:
+<img width="1675" height="355" alt="image" src="https://github.com/user-attachments/assets/d60e4b43-f93f-4636-923d-608252da032a" />
 
+Then at timestamp: 11/21/2026 20:22:00.666 commands that aim towards dicovering the target (like whoami) were executed. At this stage attacker achieved remote connection and is able to execute commands on victims system:
+<img width="1675" height="556" alt="image" src="https://github.com/user-attachments/assets/44e48e46-c240-418a-8fc2-65a51967a627" />
 
+At timestamp: 11/21/2026 20:23:08.666 attacker executed scripts that evade execution policy restrictions for that session:
+<img width="1003" height="270" alt="image" src="https://github.com/user-attachments/assets/2667580f-9f1f-4f43-9a4b-8009046e5e5d" />
+
+After that, attacker started executing another powershell commands that indicate Active Directory reconnaissance:
+<img width="1548" height="270" alt="image" src="https://github.com/user-attachments/assets/ea3ba8f0-c190-4872-9c9e-16d8c249374c" />
+<img width="1668" height="374" alt="image" src="https://github.com/user-attachments/assets/9a5cfc94-8246-45b2-a5bd-95205ea7a0eb" />
+
+Attacker created folder for exfiltration and started collecting data. He stole system data, ClientPortfolioSummary.xlsx, InvestorPresentation2023.pptx, :
+<img width="567" height="214" alt="image" src="https://github.com/user-attachments/assets/321fe8b3-3de6-441b-9bfb-768f8f91e72c" />
+<img width="695" height="441" alt="image" src="https://github.com/user-attachments/assets/1a97d2df-ff20-40f2-af41-89d05fbfd39e" />
+<img width="1668" height="347" alt="image" src="https://github.com/user-attachments/assets/c04acd0a-5293-4822-a6ab-63aa64187e0c" />
+
+Then at    timestamp: 11/21/2026 20:26:36.666  attacker started to enumerate Active Directory computers and test their connectivity and after succesfull enumeration he 
+<img width="1673" height="686" alt="image" src="https://github.com/user-attachments/assets/03521e9d-f80f-4ab1-9286-beaede539f76" />
+<img width="1673" height="732" alt="image" src="https://github.com/user-attachments/assets/4f5e9347-5baf-45a0-96a2-2b6029860bc3" />
+
+The attacker is reading BitCoinWalletPasscodes.txt, Base64-encoding and splitting its contents, then sending the chunks through DNS queries to haz4rdw4re.io.
+<img width="1686" height="770" alt="image" src="https://github.com/user-attachments/assets/4dcbc930-f32e-4d04-b2e4-7d1fa0751fa1" />
