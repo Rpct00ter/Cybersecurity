@@ -1,4 +1,4 @@
-# Security Investigation - Phishing Alert
+# Security Investigation - Splunk-Triage-True-Positive-Phishing-001
 
 ## Source
 TryHackMe - SOC Simulator
