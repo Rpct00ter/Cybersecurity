@@ -1,10 +1,10 @@
-# Security Investigation - Suspicious Email Attachment Leading to PowerShell Intrusion
+# Security Investigation - Splunk-Triage-True-Positive-Phishing-002
 
 ## Source
 TryHackMe SOC Simulator – Alert 1005: **Suspicious Attachment Found in Email**
 
 ## Scenario
-An inbound email containing a suspicious ZIP attachment was flagged for investigation. The message used urgent payment-related language and threatened account suspension and legal action. The investigation expanded to host telemetry, revealing suspicious PowerShell activity, remote access, reconnaissance, data collection, and DNS-based exfiltration indicators.
+An inbound email containing a suspicious ZIP attachment was flagged for investigation.
 
 ## Tasks
 - Investigate the sender, email content, and attachment context.
